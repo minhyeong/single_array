@@ -1,0 +1,5 @@
+
+# 「.DS_Store」や「._.DS_Store」を除外
+*.DS_Store
+/out
+.vs
