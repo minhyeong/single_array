@@ -6,7 +6,7 @@
 
 //using namespace sdsl;
 
-#define FILE_PATH "../../../corpus/Japan_Postal_Code.txt"
+#define FILE_PATH "../../corpus/Japan_Postal_Code.txt"
 //#define FILE_PATH "../../../corpus/test_postal_code.txt"
 
 int main() {
