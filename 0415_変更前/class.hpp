@@ -169,13 +169,13 @@ _SamcImpl<ValueType>::_SamcImpl(const sim_ds::graph_util::Trie<T, S>& trie) {
 #endif
 	}	
 	int bit_counter = 0;
-	std::vector<int> bit_number_list_;
+//	std::vector<int> bit_number_list_;
 	std::vector<uint8_t> temp_storage;
 	for (auto v : storage_) {
 		bit_counter++;
 		if (v != kEmptyChar) {
 			temp_storage.push_back(v);
-			bit_number_list_.push_back(bit_counter);
+//			bit_number_list_.push_back(bit_counter);
 		}
 	}
 	storage_ = temp_storage;
@@ -186,13 +186,13 @@ _SamcImpl<ValueType>::_SamcImpl(const sim_ds::graph_util::Trie<T, S>& trie) {
 	int num_element_exist = sbv_.rank(exist_flag_bits_.size());
 	
 	//std::cout << " 0 / 1 : " << sbv_.size() - storage_.size() <<" / "<< storage_.size() << std::endl;
-	std::cout << "exist_flag_bits_ memory [byte] : " << sbv_.size_in_bytes() << std::endl;
-	std::cout << "array memory [byte] : " << storage_.size() * sizeof(uint8_t) << std::endl;
+	std::cout << "SuccinctBitVector [byte] : " << sbv_.size_in_bytes() << std::endl;
+	std::cout << "storage vector [byte] : " << storage_.size() * sizeof(uint8_t) << std::endl;
 	std::cout << "code_table memory [byte] : " << code_table_.size() * sizeof(code_type) << std::endl;
 	std::cout << "sum memory [byte] : " << sbv_.size_in_bytes() + storage_.size() * sizeof(uint8_t) + code_table_.size() * sizeof(code_type) << std::endl;
 	
 //	std::cout << "" << std::endl;
-	std::cout << "bit memorize list : " << bit_number_list_.size() * sizeof(int32_t) << std::endl;
+//	std::cout << "bit memorize list : " << bit_number_list_.size() * sizeof(int32_t) << std::endl;
 
 	// 11/25
 

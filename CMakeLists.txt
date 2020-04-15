@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.1)
 
-project(SingleArray)
+project(single_array)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if (NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE Release)
+	set(CMAKE_BUILD_TYPE debug)
 endif()
 
 
@@ -23,9 +23,8 @@ add_executable(main main.cpp)
 set(BOOST_ROOT "C:/boost_1_70_0")
 
 add_subdirectory(SimpleDataStructure EXCLUDE_FROM_ALL)
-#target_link_libraries(main PRIVATE sim_ds sdsl)
-
-target_link_libraries(main sim_ds)
+target_link_libraries(main PRIVATE sim_ds sdsl)
+#target_link_libraries(main sim_ds)
 
 
 #find_package(Boost 1.53.0 REQUIRED)

@@ -1,9 +1,10 @@
 
-#include "Samc.hpp"
+//#include <Samc.hpp>
+#include "class.hpp"
 #include "sdsl/rrr_vector.hpp"
 
+
 #define FILE_PATH "../corpus/Japan_Postal_Code.txt"
-//#define FILE_PATH "../corpus/test_postal_code.txt"
 
 int main() {
 
@@ -17,15 +18,16 @@ int main() {
 	}else {
 		std::cout << "Reading for [" << FILE_PATH << "]" << std::endl;
 	}
+
+	Samc<size_t>::input_trie<char, uint32_t> trie;
+	
 	for (std::string s; getline(ifs, s);) {
 		if (not s.empty()) {
 			str_set.push_back(s);
 		}
+		trie.insert(s, 1);
 	}
-
-	std::sort(str_set.begin(), str_set.end());
-	sim_ds::Samc<uint32_t> samc(str_set.begin(), str_set.end());
-
+	Samc<uint32_t> samc(trie);
 	clock_t end = clock();
 	const double exe_time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000.0;
 	ifs.seekg(0);
@@ -46,7 +48,8 @@ int main() {
 
 	std::cout << "exe time : " << exe_time << std::endl;
 	std::cout << "serch time : " << seartch_time << std::endl;
+//	std::cout << "serch time / corpus : " << (seartch_time / str_set.size()) << std::endl;
 	std::cout << "serch time / corpus : " << std::fixed << std::setprecision(8) 
 		<< (seartch_time / str_set.size()) << std::endl;
-
 }
+
