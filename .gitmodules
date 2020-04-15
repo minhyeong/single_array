@@ -1,0 +1,3 @@
+[submodule "SimpleDataStructure"]
+	path = SimpleDataStructure
+	url = https://github.com/MatsuTaku/SimpleDataStructure.git

@@ -7,7 +7,7 @@
 #include <fstream>
 #include <set>
 #include <string>
-#include "sim_ds/graph_util.hpp"
+#include "sim_ds/string_util/graph_util.hpp"
 #include "sim_ds/BitVector.hpp"
 #include "sim_ds/SuccinctBitVector.hpp"
 
@@ -27,7 +27,7 @@ public:
 	static constexpr uint8_t kEmptyChar = 0xFF;
 
 protected:
-	std::vector<bool> exist_flag_bits_; // ƒ[ƒJƒ‹‚ÉˆÚ“®
+	std::vector<bool> exist_flag_bits_;
 	sim_ds::SuccinctBitVector<false> sbv_;
 	std::vector<uint8_t> storage_;
 	using code_type = std::array<value_type, kAlphabetSize>;
@@ -63,15 +63,15 @@ public:
 	}
 
 	void Write(std::ostream& os) const {
-		write_vec(storage_, os);
-		write_vec(code_table_, os);
-		write_vec(max_, os);
+		this->write_vec(storage_, os);
+		this->write_vec(code_table_, os);
+		this->write_vec(max_, os);
 	}
 
 	void Read(std::istream& is) {
-		read_vec(is, storage_);
-		read_vec(is, code_table_);
-		read_vec(is, max_);
+		this->read_vec(is, storage_);
+		this->read_vec(is, code_table_);
+		this->read_vec(is, max_);
 	}
 
 protected:
@@ -86,9 +86,8 @@ private:
 
 };
 
-//«««««««««««««««««««««««««««««««««««««««««««««««««««««
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-// •ÒW’†
 template <typename ValueType>
 template <typename T, typename S>
 _SamcImpl<ValueType>::_SamcImpl(const sim_ds::graph_util::Trie<T, S>& trie) {
@@ -100,7 +99,7 @@ _SamcImpl<ValueType>::_SamcImpl(const sim_ds::graph_util::Trie<T, S>& trie) {
 	position_type max_index = 0;
 
 	while (max_index >= 0) {
-#ifndef NDEBUG // •¶š‚ÌŠi”[ŠK‘w‚É‚Â‚¢‚ÄH
+#ifndef NDEBUG
 		std::cerr << "depth: " << max_.size()
 			<< ", block_height: " << max_index << std::endl;
 #endif
@@ -169,7 +168,7 @@ _SamcImpl<ValueType>::_SamcImpl(const sim_ds::graph_util::Trie<T, S>& trie) {
 		std::cerr << "used: " << std::fixed << std::setprecision(2) << " %" << per_used << std::endl << std::endl;
 #endif
 	}	
-	int bit_counter = 0; // bit ‚ÌˆÊ’u‚ğƒƒ‚
+	int bit_counter = 0;
 	std::vector<int> bit_number_list_;
 	std::vector<uint8_t> temp_storage;
 	for (auto v : storage_) {
@@ -179,21 +178,21 @@ _SamcImpl<ValueType>::_SamcImpl(const sim_ds::graph_util::Trie<T, S>& trie) {
 			bit_number_list_.push_back(bit_counter);
 		}
 	}
-	storage_ = temp_storage; // ã‘‚«
+	storage_ = temp_storage;
 	temp_storage.clear();
 
-	sbv_ = sim_ds::SuccinctBitVector<false>(std::move(exist_flag_bits_)); // ŠÈŒ‰ƒf[ƒ^\‘¢
+	sbv_ = sim_ds::SuccinctBitVector<false>(std::move(exist_flag_bits_));
 
 	int num_element_exist = sbv_.rank(exist_flag_bits_.size());
 	
-	std::cout << "” 0 / 1 : " << sbv_.size() - storage_.size() <<" / "<< storage_.size() << std::endl;
+	//std::cout << " 0 / 1 : " << sbv_.size() - storage_.size() <<" / "<< storage_.size() << std::endl;
 	std::cout << "exist_flag_bits_ memory [byte] : " << sbv_.size_in_bytes() << std::endl;
 	std::cout << "array memory [byte] : " << storage_.size() * sizeof(uint8_t) << std::endl;
 	std::cout << "code_table memory [byte] : " << code_table_.size() * sizeof(code_type) << std::endl;
 	std::cout << "sum memory [byte] : " << sbv_.size_in_bytes() + storage_.size() * sizeof(uint8_t) + code_table_.size() * sizeof(code_type) << std::endl;
 	
 //	std::cout << "" << std::endl;
-	std::cout << "bit memorize list : " << bit_number_list_.size() * sizeof(int32_t) << std::endl; // ƒrƒbƒgˆÊ’u•Û‘¶ƒŠƒXƒg
+	std::cout << "bit memorize list : " << bit_number_list_.size() * sizeof(int32_t) << std::endl;
 
 	// 11/25
 
@@ -204,11 +203,11 @@ _SamcImpl<ValueType>::_SamcImpl(const sim_ds::graph_util::Trie<T, S>& trie) {
 
 
 }
-//ªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªª
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
-/* ã‚ÌƒR[ƒh‚ÌŒ´Œ^ */
-//«««««««««««««««««««««««««««««««««««««««««««««««««««««
+/* å…ƒ */
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 /*
 template <typename ValueType>
 template <typename T, typename S>
@@ -273,7 +272,8 @@ _SamcImpl<ValueType>::_SamcImpl(const sim_ds::graph_util::Trie<T, S>& trie) {
 		}
 		max_.push_back(storage_.size() - 1);
 #ifndef NDEBUG
-		auto used = sim_ds::SuccinctBitVector<false>(empties).rank_0(empties.size());
+		auto used = sim_ds::SuccinctBitVector<false>(empt
+// Â•Å‡ÂWÂ’Â†ies).rank_0(empties.size());
 		double per_used = double(used) / empties.size() * 100;
 		std::cerr << "used: " << std::fixed << std::setprecision(2) << " %" << per_used << std::endl << std::endl;
 #endif
@@ -282,7 +282,7 @@ _SamcImpl<ValueType>::_SamcImpl(const sim_ds::graph_util::Trie<T, S>& trie) {
 	std::cout << "" << std::endl;
 }
 */
-//ªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªªª
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 template <typename ValueType>
@@ -356,7 +356,7 @@ private:
 };
 
 
-// •ÒW’†
+// update 04/13
 template <typename ValueType>
 bool
 Samc<ValueType>::accept(std::string_view key) const {
@@ -377,6 +377,8 @@ Samc<ValueType>::accept(std::string_view key) const {
 }
 #endif // #endif
 
+//
+//-----------------------------------------------------------------------------------------------------
 /*
 template <typename ValueType>
 bool
@@ -398,3 +400,4 @@ Samc<ValueType>::accept(std::string_view key) const {
 }
 #endif // #endif
 */
+//-----------------------------------------------------------------------------------------------------

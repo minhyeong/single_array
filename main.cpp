@@ -1,21 +1,14 @@
 
 #include "class.hpp"
-#include <windows.h>
-//#include "sdsl/bit_vectors.hpp"
-//#include "sdsl/suffix_arrays.hpp"
 
-//using namespace sdsl;
-
-#define FILE_PATH "../../corpus/Japan_Postal_Code.txt"
-//#define FILE_PATH "../../../corpus/test_postal_code.txt"
+#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
 
 int main() {
 
 	std::ifstream ifs(FILE_PATH);
 	std::vector<std::string> str_set;
 
-	clock_t start = clock(); // ÀsŠJn
-	// ƒR[ƒpƒX‚Ìæ“¾
+	clock_t start = clock();
 	if (ifs.fail()) {
 		std::cerr << "ERROR : Failed File Open" << std::endl;
 		return -1;
@@ -32,10 +25,10 @@ int main() {
 		trie.insert(s, 1);
 	}
 	Samc<uint32_t> samc(trie);
-	clock_t end = clock(); // ÀsI—¹
-	const double exe_time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000.0; // ÀsŠÔŒv‘ªŒ‹‰Ê
+	clock_t end = clock();
+	const double exe_time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000.0; // ÂÅ”ÂsÂÂÂŠÃ”ÂŒvÂ‘ÅÂŒÂ‹Â‰Ä˜
 	ifs.seekg(0);
-	int failed_num = 0; // 1‰ñ‚É‘Î‚·‚éŒŸõŠÔ‚Ì‘ª’è
+	int failed_num = 0;
 
 	start = clock();
 	for (auto& v : str_set) {
@@ -47,8 +40,8 @@ int main() {
 	const double seartch_time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000.0;
 
 
-	std::cout << "ÀsŠÔ : " << exe_time << std::endl;
-	std::cout << "‘S‚Ä‚ÌŒŸõŠÔ" << seartch_time << std::endl;
-	std::cout << "1‰ñ“–‚½‚è‚Ì•½‹ÏŒŸõŠÔ : " << seartch_time / str_set.size() << std::endl;
+	std::cout << "exe time : " << exe_time << std::endl;
+	std::cout << "serch time" << seartch_time << std::endl;
+	std::cout << "serch time / corpus : " << seartch_time / str_set.size() << std::endl;
 }
 
