@@ -42,11 +42,9 @@ int main() {
 	end = clock();
 	const double seartch_time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000.0;
 
-	std::cout << "failed_num : " << failed_num << std::endl;
+	//std::cout << "failed_num : " << failed_num << std::endl;
 
-//	std::cout << "exe time : " << exe_time << std::endl;
-//	std::cout << "serch time : " << seartch_time << std::endl;
-	std::cout << "serch time / corpus : " << std::fixed << std::setprecision(8) 
+	std::cout << "serch time / corpus : [ms]" << std::fixed << std::setprecision(8) 
 		<< (seartch_time / str_set.size()) << std::endl;
 
 }

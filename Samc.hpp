@@ -207,9 +207,14 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
 
   // Store character to storage_
   storage_.resize(head_.back(), kEmptyChar);
-  for (auto i_c : storage_map)
+  for (auto i_c : storage_map){
     storage_[i_c.first] = i_c.second;
+  }
 
+  // new > 04/20 imamura
+  std::cout << "storage_ : [Byte]" << storage_.size() * sizeof(char_type) << std::endl;
+  std::cout << "" << std::endl;
+  
 }
 
 template <typename CodeType>

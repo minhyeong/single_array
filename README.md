@@ -14,4 +14,9 @@ https://github.com/MatsuTaku/SimpleDataStructure.git
     this->write_vec(storage_, os);
     ```
 
-- 
+### 04/20
+- SimpleDataStructure
+    |Japan_Postal_Code.txt [Byte]|978,620|
+    |:-|-:|
+    |storage_ [Byte]|7,942|
+    |serch time [ms]|0.000,233,00|
