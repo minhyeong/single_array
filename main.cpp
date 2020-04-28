@@ -44,7 +44,7 @@ int main() {
 
 	//std::cout << "failed_num : " << failed_num << std::endl;
 
-	std::cout << "serch time / corpus : [ms]" << std::fixed << std::setprecision(8) 
-		<< (seartch_time / str_set.size()) << std::endl;
+	std::cout << "serch time / corpus : " << std::fixed << std::setprecision(8) 
+		<< (seartch_time / str_set.size()) << " [ms]" << std::endl;
 
 }
