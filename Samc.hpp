@@ -213,7 +213,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
 
   // new > 04/20 imamura
   std::cout << "storage_ : " << storage_.size() * sizeof(char_type) << " [Byte]" << std::endl;
-  std::cout << "code_table_ : " << code_table_.size() * sizeof(code_table_) << " [Byte]" << std::endl;
+  std::cout << "code_table_ : " << code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) << " [Byte]" << std::endl;
 }
 
 template <typename CodeType>
