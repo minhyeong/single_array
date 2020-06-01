@@ -1,9 +1,10 @@
 
-#include "Samc.hpp"
-//#include "rank_Samc.hpp"
+//#include "Samc.hpp"
+#include "rank_Samc.hpp"
 #include "sdsl/rrr_vector.hpp"
 
-#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
+//#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
+#define FILE_PATH "../corpus/japanese.txt"
 //#define FILE_PATH "../corpus/test_postal_code.txt"
 
 int main() {
@@ -45,6 +46,6 @@ int main() {
 	//std::cout << "failed_num : " << failed_num << std::endl;
 
 	std::cout << "serch time / corpus : " << std::fixed << std::setprecision(8) 
-		<< (search_time / str_set.size()) << " [ms]" << std::endl;
+		<< (search_time / str_set.size()) << " [ms / word]" << std::endl;
 
 }

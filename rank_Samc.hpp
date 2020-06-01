@@ -208,7 +208,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   // Store character to storage_
   storage_.resize(head_.back(), kEmptyChar);
   for (auto i_c : storage_map){
-    storage_[i_c.first] = i_c.second;
+    storage_[i_c.first] = i_c.second; // list_number / char?
   }
 
   // new > 04/20 imamura

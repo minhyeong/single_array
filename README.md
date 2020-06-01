@@ -14,9 +14,6 @@ https://github.com/MatsuTaku/SimpleDataStructure.git
     this->write_vec(storage_, os);
     ```
 
-### 04/20
-- SimpleDataStructure
-    |Japan_Postal_Code.txt [Byte]|978,620|
-    |:-|-:|
-    |storage_ [Byte]|7,942|
-    |serch time [ms]|0.000,233,00|
+### 01/06/2020
+- std::string_view の参照エラー
+    - C++17以上であれば問題ないが, 参照エラー表示がでる
