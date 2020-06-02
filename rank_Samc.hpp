@@ -206,15 +206,27 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   }
 
   // Store character to storage_
-  storage_.resize(head_.back(), kEmptyChar);
+  std::vector<bool> bit_strings;
+  storage_.resize(head_.back(), kEmptyChar);  
   for (auto i_c : storage_map){
-    storage_[i_c.first] = i_c.second; // list_number / char?
+    storage_[i_c.first] = i_c.second; // list_number / char
+    if(i_c.second != kLeafChar){
+      bit_strings.push_back(true);
+    }else{
+      bit_strings.push_back(false);
+    }
   }
+  storage_.erase(std::remove(storage_.begin(), storage_.end(), kLeafChar), storage_.end());
 
-  // new > 04/20 imamura
+  // new > 04/20 imamura ***************************************************************************************************
+  int bit_strings_size = bit_strings.size() / 8;
+  if(bit_strings.size()%8 != 0)
+    bit_strings_size+=1;
+    
+  std::cout << "bit_strings : " << bit_strings_size << " [Byte]" << std::endl; // 特殊化により各要素は１ビットにパッケージされる
   std::cout << "storage_ : " << storage_.size() * sizeof(char_type) << " [Byte]" << std::endl;
   std::cout << "code_table_ : " << code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) << " [Byte]" << std::endl;
-  std::cout << "Single Array Size : " << storage_.size() * sizeof(char_type) + code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) << " [Byte]" << std::endl;
+  std::cout << "Single Array Size : " << storage_.size() * sizeof(char_type) + code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) + bit_strings_size << " [Byte]" << std::endl;
 }
 
 template <typename CodeType>
@@ -436,6 +448,7 @@ private:
 
 };
 
+// 02/06/2020 imamura
 template <typename CodeType>
 bool
 Samc<CodeType>::accept(std::string_view key) const {
