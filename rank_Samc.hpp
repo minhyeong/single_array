@@ -206,23 +206,26 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   }
 
   // Store character to storage_
-  std::vector<bool> bit_strings;
+  std::vector<bool> exist_flag_bits_;
   storage_.resize(head_.back(), kEmptyChar);  
   for (auto i_c : storage_map){
-    storage_[i_c.first] = i_c.second; // list_number / char
+    storage_[i_c.first] = i_c.second; // list_number | char
     if(i_c.second != kLeafChar){
-      bit_strings.push_back(true);
+      exist_flag_bits_.push_back(true);
     }else{
-      bit_strings.push_back(false);
+      exist_flag_bits_.push_back(false);
     }
   }
   storage_.erase(std::remove(storage_.begin(), storage_.end(), kLeafChar), storage_.end());
 
   // new > 04/20 imamura ***************************************************************************************************
-  int bit_strings_size = bit_strings.size() / 8;
-  if(bit_strings.size()%8 != 0)
+  int bit_strings_size = exist_flag_bits_.size() / 8;
+  if(exist_flag_bits_.size()%8 != 0)
     bit_strings_size+=1;
-    
+  
+  //sbv = sim_ds::SuccinctBitVector<false>(std::move(exist_flag_bits_));
+  //int num_element_exist = sbv.rank(exist_flag_bits_.size());
+
   std::cout << "bit_strings : " << bit_strings_size << " [Byte]" << std::endl; // 特殊化により各要素は１ビットにパッケージされる
   std::cout << "storage_ : " << storage_.size() * sizeof(char_type) << " [Byte]" << std::endl;
   std::cout << "code_table_ : " << code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) << " [Byte]" << std::endl;
