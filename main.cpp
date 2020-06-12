@@ -1,10 +1,10 @@
 
 //#include "Samc.hpp"
-#include "rank_Samc.hpp"
+#include "Rank_Samc.hpp"
 #include "sdsl/rrr_vector.hpp"
 
-#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
-//#define FILE_PATH "../corpus/en.txt"
+//#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
+#define FILE_PATH "../corpus/en.txt"
 //#define FILE_PATH "../corpus/test_postal_code.txt"
 
 int main() {
@@ -36,6 +36,7 @@ int main() {
 	
 	for (auto& v : str_set) {
 		if (not samc.accept(v)) {
+			//std::cout << "accept : " << samc.accept(v) << std::endl;
 			failed_num++;
 		}
 	}

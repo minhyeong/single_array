@@ -79,10 +79,23 @@ protected:
     std::vector<std::array<code_type, kAlphabetSize>> code_table_;
     std::vector<code_type> head_;
 
+    std::vector<bool> exist_flag_bits_; // imamura add
+    SuccinctBitVector<true> sbv; // imamura add
+
 public:
     _SamcImpl() = default;
 
-    char_type check(size_t index) const {return storage_[index];}
+    //char_type check(size_t index) const {return storage_[index];}
+    char_type check(char_type index) const {
+      if(sbv[index]){
+        int n = sbv.rank(index);
+        //std::cout << "rank storage_[" << n << "] : " << storage_[n] << std::endl;
+        return storage_[n];
+      }else {
+        //std::cout << "kemp" << std::endl;
+        return kEmptyChar;
+      }
+    }
 
     code_type code(size_t depth, char_type c) const {return code_table_[depth][c];}
 
@@ -206,7 +219,6 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   }
 
   // Store character to storage_
-  std::vector<bool> exist_flag_bits_;
   storage_.resize(head_.back(), kEmptyChar);  
   for (auto i_c : storage_map){
     storage_[i_c.first] = i_c.second; // list_number | char
@@ -217,19 +229,19 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
     }
   }
   storage_.erase(std::remove(storage_.begin(), storage_.end(), kLeafChar), storage_.end());
-
-  // new > 04/20 imamura ***************************************************************************************************
-  int bit_strings_size = exist_flag_bits_.size() / 8;
-  if(exist_flag_bits_.size()%8 != 0)
-    bit_strings_size+=1;
   
-  //sbv = sim_ds::SuccinctBitVector<false>(std::move(exist_flag_bits_));
-  //int num_element_exist = sbv.rank(exist_flag_bits_.size());
+  sbv = SuccinctBitVector<true>(std::move(exist_flag_bits_));
 
-  std::cout << "bit_strings : " << bit_strings_size << " [Byte]" << std::endl; // 特殊化により各要素は１ビットにパッケージされる
+  // add imamura 06/12
+  //int bit_strings_size = exist_flag_bits_.size() / 8;
+  //if(exist_flag_bits_.size()%8 != 0)
+  //  bit_strings_size+=1;
+  
+  std::cout << "SuccinctBitVector : " << sbv.size_in_bytes() << "[Byte]" << std::endl;
+  //std::cout << "bit_strings : " << bit_strings_size << " [Byte]" << std::endl; // 特殊化により各要素は１ビットにパッケージされる
   std::cout << "storage_ : " << storage_.size() * sizeof(char_type) << " [Byte]" << std::endl;
   std::cout << "code_table_ : " << code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) << " [Byte]" << std::endl;
-  std::cout << "Single Array Size : " << storage_.size() * sizeof(char_type) + code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) + bit_strings_size << " [Byte]" << std::endl;
+  std::cout << "Single Array Size : " << storage_.size() * sizeof(char_type) + code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) + sbv.size_in_bytes() << " [Byte]" << std::endl;
 }
 
 template <typename CodeType>
@@ -429,6 +441,7 @@ public:
     [[deprecated("Maybe consume much memory. You should construct from string-iterator like (begin end)")]]
     explicit Samc(const input_trie<T, S>& trie) : _base(trie) {}
 
+
     bool accept(std::string_view key) const;
 
     size_t size_in_bytes() const {return _base::size_in_bytes();}
@@ -459,6 +472,7 @@ Samc<CodeType>::accept(std::string_view key) const {
   size_t depth = 0;
   for (; depth < key.size(); depth++) {
     uint8_t c = key[depth];
+
     auto target = node + _base::code(depth, c);
     if (not in_range(target, depth+1) or
         _base::check(target) != c) {
