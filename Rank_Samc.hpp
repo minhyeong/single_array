@@ -19,7 +19,7 @@
 namespace sim_ds {
 
 template <typename Iter>
-class string_array_explorer {
+class string_array_explorer { // トライを構築したようなやり方でできる。メモリが軽くなる。
 public:
     using iterator_traits = std::iterator_traits<Iter>;
     static_assert(std::is_convertible_v<typename iterator_traits::value_type, std::string>);
@@ -219,7 +219,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   }
 
   // Store character to storage_
-  storage_.resize(head_.back(), kEmptyChar);  
+  storage_.resize(head_.back(), kEmptyChar);
   for (auto i_c : storage_map){
     storage_[i_c.first] = i_c.second; // list_number | char
     if(i_c.second != kLeafChar){
@@ -228,15 +228,12 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
       exist_flag_bits_.push_back(false);
     }
   }
+  //std::cout << "storage 削除前 : " << storage_.size() << std::endl;
   storage_.erase(std::remove(storage_.begin(), storage_.end(), kLeafChar), storage_.end());
-  
-  sbv = SuccinctBitVector<true>(std::move(exist_flag_bits_));
+  //std::cout << "storage 削除後 : " << storage_.size() << std::endl;
 
-  // add imamura 06/12
-  //int bit_strings_size = exist_flag_bits_.size() / 8;
-  //if(exist_flag_bits_.size()%8 != 0)
-  //  bit_strings_size+=1;
-  
+  sbv = SuccinctBitVector<true>(std::move(exist_flag_bits_));
+  // imamura
   std::cout << "SuccinctBitVector : " << sbv.size_in_bytes() << "[Byte]" << std::endl;
   //std::cout << "bit_strings : " << bit_strings_size << " [Byte]" << std::endl; // 特殊化により各要素は１ビットにパッケージされる
   std::cout << "storage_ : " << storage_.size() * sizeof(char_type) << " [Byte]" << std::endl;
@@ -472,7 +469,6 @@ Samc<CodeType>::accept(std::string_view key) const {
   size_t depth = 0;
   for (; depth < key.size(); depth++) {
     uint8_t c = key[depth];
-
     auto target = node + _base::code(depth, c);
     if (not in_range(target, depth+1) or
         _base::check(target) != c) {

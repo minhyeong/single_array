@@ -1,6 +1,6 @@
 
-//#include "Samc.hpp"
-#include "Rank_Samc.hpp"
+#include "Samc.hpp"
+//#include "Rank_Samc.hpp"
 #include "sdsl/rrr_vector.hpp"
 
 //#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
@@ -49,4 +49,5 @@ int main() {
 	std::cout << "serch time / corpus : " << std::fixed << std::setprecision(8) 
 		<< (search_time / str_set.size()) << " [ms/word]" << std::endl;
 
+	return 0;
 }
