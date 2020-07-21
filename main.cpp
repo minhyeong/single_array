@@ -1,6 +1,7 @@
 
-#include "Samc.hpp"
-//#include "Rank_Samc.hpp"
+//#include "Samc.hpp"
+#include "Rank_Samc.hpp"
+//#include "rank_make.hpp"
 #include "sdsl/rrr_vector.hpp"
 
 //#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
@@ -12,6 +13,7 @@ int main() {
 	std::ifstream ifs(FILE_PATH);
 	std::vector<std::string> str_set;
 
+	// Loading Corpus
 	if (ifs.fail()) {
 		std::cerr << "ERROR : Failed File Open" << std::endl;
 		return -1;
@@ -25,6 +27,7 @@ int main() {
 	}
 
 	std::sort(str_set.begin(), str_set.end());
+	// make SAMC
 	sim_ds::Samc<uint32_t> samc(str_set.begin(), str_set.end());
 
 	ifs.seekg(0);

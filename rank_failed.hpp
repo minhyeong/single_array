@@ -19,7 +19,7 @@
 namespace sim_ds {
 
 template <typename Iter>
-class string_array_explorer {
+class string_array_explorer { // トライを構築したようなやり方でできる。メモリが軽くなる。
 public:
     using iterator_traits = std::iterator_traits<Iter>;
     static_assert(std::is_convertible_v<typename iterator_traits::value_type, std::string>);
@@ -76,25 +76,25 @@ public:
 
 protected:
     std::vector<char_type> storage_;
-    std::vector<char_type> storage_temp;
-    std::vector<bool> exist_flag_bits_; // 
-    SuccinctBitVector<true> sbv_; // 
     std::vector<std::array<code_type, kAlphabetSize>> code_table_;
     std::vector<code_type> head_;
+
+    std::vector<bool> exist_flag_bits_; // imamura add
+    SuccinctBitVector<true> sbv; // imamura add
 
 public:
     _SamcImpl() = default;
 
-    char_type check(size_t index) const {
-      // ここでrank処理を記述
-
-
-      if(sbv_.rank(index)) {
-        return storage_[sbv_.rank(index)];
+    //char_type check(size_t index) const {return storage_[index];}
+    char_type check(char_type index) const {
+      if(sbv[index]){
+        int n = sbv.rank(index);
+        //std::cout << "rank storage_[" << n << "] : " << storage_[n] << std::endl;
+        return storage_[n];
       }else {
+        //std::cout << "kemp" << std::endl;
         return kEmptyChar;
       }
-      //return storage_[index];
     }
 
     code_type code(size_t depth, char_type c) const {return code_table_[depth][c];}
@@ -219,48 +219,26 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   }
 
   // Store character to storage_
-
-  
-  /*
-  07/21
-  rank 検索に不備があるかもしれない
-  一部rank検索が失敗している
-  */
-
   storage_.resize(head_.back(), kEmptyChar);
   for (auto i_c : storage_map){
-    storage_[i_c.first] = i_c.second;
-    //std::cout << i_c.first << ":" << i_c.second << std::endl;
-    if(i_c.second != kLeafChar){ // ビット列 問題なし
+    storage_[i_c.first] = i_c.second; // list_number | char
+    if(i_c.second != kLeafChar){
       exist_flag_bits_.push_back(true);
     }else{
       exist_flag_bits_.push_back(false);
     }
   }
-  sbv_ = SuccinctBitVector<true>(std::move(exist_flag_bits_));
+  //std::cout << "storage 削除前 : " << storage_.size() << std::endl;
+  storage_.erase(std::remove(storage_.begin(), storage_.end(), kLeafChar), storage_.end());
+  //std::cout << "storage 削除後 : " << storage_.size() << std::endl;
 
-  // 空白埋め 問題なし
-  storage_temp = storage_;
-  storage_.erase(std::remove(storage_.begin(), storage_.end(), NULL), storage_.end());
-  
-  /* // 中身の確認
-  for (auto v : storage_) {
-    std::cout << "s_ : " << v << std::endl;
-  }
-  for (auto v : storage_temp) {
-    std::cout << "st : " << v << std::endl;
-  }
-  for (auto v : exist_flag_bits_) {
-    std::cout << "ef : " << v << std::endl;
-  }
-  for (int i=0;i<exist_flag_bits_.size();i++) {
-    std::cout << "sb : " << sbv_[i] << std::endl;
-  }*/
-
-  // new > 04/20 imamura
+  sbv = SuccinctBitVector<true>(std::move(exist_flag_bits_));
+  // imamura
+  std::cout << "SuccinctBitVector : " << sbv.size_in_bytes() << "[Byte]" << std::endl;
+  //std::cout << "bit_strings : " << bit_strings_size << " [Byte]" << std::endl; // 特殊化により各要素は１ビットにパッケージされる
   std::cout << "storage_ : " << storage_.size() * sizeof(char_type) << " [Byte]" << std::endl;
   std::cout << "code_table_ : " << code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) << " [Byte]" << std::endl;
-  std::cout << "Single Array Size : " << storage_.size() * sizeof(char_type) + code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) << " [Byte]" << std::endl;
+  std::cout << "Single Array Size : " << storage_.size() * sizeof(char_type) + code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) + sbv.size_in_bytes() << " [Byte]" << std::endl;
 }
 
 template <typename CodeType>
@@ -374,7 +352,6 @@ _SamcImpl<CodeType>::y_check_legacy_(const std::vector<size_t>& indices, const B
       return index < (empties.size()-1)/kMaskWidth+1 ? ~empties.data()[index] : 0;
   };
 
-
   SuccinctBitVector<true> sbv(empties);
   auto num_empties = [&](size_t begin, size_t end) {
       return sbv.rank(end) - sbv.rank(begin);
@@ -461,6 +438,7 @@ public:
     [[deprecated("Maybe consume much memory. You should construct from string-iterator like (begin end)")]]
     explicit Samc(const input_trie<T, S>& trie) : _base(trie) {}
 
+
     bool accept(std::string_view key) const;
 
     size_t size_in_bytes() const {return _base::size_in_bytes();}
@@ -483,6 +461,7 @@ private:
 
 };
 
+// 02/06/2020 imamura
 template <typename CodeType>
 bool
 Samc<CodeType>::accept(std::string_view key) const {
