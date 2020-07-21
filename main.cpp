@@ -24,7 +24,7 @@ int main() {
 		if (not s.empty()) {
 			str_set.push_back(s);
 		}
-	}
+	} 
 
 	std::sort(str_set.begin(), str_set.end());
 	// make SAMC
