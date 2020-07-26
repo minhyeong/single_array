@@ -87,6 +87,11 @@ public:
 
     char_type check(size_t index) const {
       // ここでrank処理を記述
+      // sbvへの渡し方が悪い可能性
+      //std::cout << "s_ / t : " << storage_[sbv_.rank(index)] 
+      //<< "/" << storage_temp[index] << std::endl;
+      std::cout << "index : rank : " << index
+      << "/" << sbv_.rank(index) << std::endl;
 
 
       if(sbv_.rank(index)) {
@@ -243,18 +248,12 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   storage_temp = storage_;
   storage_.erase(std::remove(storage_.begin(), storage_.end(), NULL), storage_.end());
   
-  /* // 中身の確認
+  /*// 中身の確認
   for (auto v : storage_) {
     std::cout << "s_ : " << v << std::endl;
   }
   for (auto v : storage_temp) {
     std::cout << "st : " << v << std::endl;
-  }
-  for (auto v : exist_flag_bits_) {
-    std::cout << "ef : " << v << std::endl;
-  }
-  for (int i=0;i<exist_flag_bits_.size();i++) {
-    std::cout << "sb : " << sbv_[i] << std::endl;
   }*/
 
   // new > 04/20 imamura
