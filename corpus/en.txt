@@ -1,7 +1,6 @@
 abca
 abcb
 abcd
-abcd
 abcr
 abch
 abct

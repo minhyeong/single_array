@@ -13,7 +13,7 @@
 #include "sim_ds/string_util/graph_util.hpp"
 #include "sim_ds/bit_util.hpp"
 #include "sim_ds/BitVector.hpp"
-#include "sim_ds/SuccinctBitVector.hpp"
+#include "SuccinctBitVector.hpp"
 #include "sim_ds/log.hpp"
 
 namespace sim_ds {
@@ -84,22 +84,21 @@ protected:
 
 public:
     _SamcImpl() = default;
-    // Rank 関連 ***************************************
+    // Rank 関連 ***************************************************
     char_type check(size_t index) const {
-      std::cout << "index : rank : " << index 
-      << " / " << sbv_.rank(index) << std::endl;
 
-      std::cout << "index : rank : " << storage_temp[index] 
-      << " / " << storage_[sbv_.rank(index)] << std::endl;
+      //std::cout 
+      //<< "index : rank : accept  ::  " << storage_temp[index] 
+      //<< " / " << storage_[sbv_.rank(index)] 
+      //<< " : " << index << " / " << sbv_.rank(index)
+      //<< " : " << sbv_.accept(index)
+      //<< std::endl;
 
-      // nullをnullと返す必要がある
-      // 多少の番号変動は無視 > 答えはあってるから
-      // 
-
-      if(sbv_.rank(index)) {
+      if(sbv_.accept(index) == 1) {
         return storage_[sbv_.rank(index)];
       }else {
-        return kEmptyChar;
+        //return kEmptyChar;
+        return NULL;
       }
       //return storage_[index];
     }
