@@ -84,15 +84,17 @@ protected:
 
 public:
     _SamcImpl() = default;
-
+    // Rank 関連 ***************************************
     char_type check(size_t index) const {
-      // ここでrank処理を記述
-      // sbvへの渡し方が悪い可能性
-      //std::cout << "s_ / t : " << storage_[sbv_.rank(index)] 
-      //<< "/" << storage_temp[index] << std::endl;
-      std::cout << "index : rank : " << index
-      << "/" << sbv_.rank(index) << std::endl;
+      std::cout << "index : rank : " << index 
+      << " / " << sbv_.rank(index) << std::endl;
 
+      std::cout << "index : rank : " << storage_temp[index] 
+      << " / " << storage_[sbv_.rank(index)] << std::endl;
+
+      // nullをnullと返す必要がある
+      // 多少の番号変動は無視 > 答えはあってるから
+      // 
 
       if(sbv_.rank(index)) {
         return storage_[sbv_.rank(index)];
@@ -231,30 +233,33 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   rank 検索に不備があるかもしれない
   一部rank検索が失敗している
   */
-
+  
+  storage_temp = storage_;
   storage_.resize(head_.back(), kEmptyChar);
+  
+  
   for (auto i_c : storage_map){
     storage_[i_c.first] = i_c.second;
     //std::cout << i_c.first << ":" << i_c.second << std::endl;
-    if(i_c.second != kLeafChar){ // ビット列 問題なし
-      exist_flag_bits_.push_back(true);
-    }else{
-      exist_flag_bits_.push_back(false);
-    }
+    //if(i_c.second != kLeafChar){ // ビット列 問題なし
+    //  exist_flag_bits_.push_back(true);
+    //}else{
+    //  exist_flag_bits_.push_back(false);
+    //}
   }
-  sbv_ = SuccinctBitVector<true>(std::move(exist_flag_bits_));
+
+  //sbv_ = SuccinctBitVector<true>(std::move(exist_flag_bits_));
+  sbv_ = SuccinctBitVector<true>(std::move(storage_)); // テスト
 
   // 空白埋め 問題なし
   storage_temp = storage_;
   storage_.erase(std::remove(storage_.begin(), storage_.end(), NULL), storage_.end());
   
-  /*// 中身の確認
-  for (auto v : storage_) {
-    std::cout << "s_ : " << v << std::endl;
-  }
-  for (auto v : storage_temp) {
-    std::cout << "st : " << v << std::endl;
-  }*/
+
+  //std::cout << sbv_ << std::endl;
+
+
+
 
   // new > 04/20 imamura
   std::cout << "storage_ : " << storage_.size() * sizeof(char_type) << " [Byte]" << std::endl;
