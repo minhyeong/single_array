@@ -1,11 +1,12 @@
 
 //#include "Samc.hpp"
-#include "Rank_Samc.hpp" // 
+#include "Rank_Samc.hpp"
 //#include "rank_samc_0908.hpp"
-#include "sdsl/rrr_vector.hpp"
+//#include "sdsl/rrr_vector.hpp"
 #include "SuccinctBitVector.hpp"
 
-#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
+//#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
+#define FILE_PATH "../corpus/dna.100MB"
 //#define FILE_PATH "../corpus/en.txt"
 //#define FILE_PATH "../corpus/test_postal_code.txt"
 

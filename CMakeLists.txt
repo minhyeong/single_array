@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.1)
 
 project(single_array)
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0") #debug
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
