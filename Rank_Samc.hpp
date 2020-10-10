@@ -13,7 +13,7 @@
 #include "sim_ds/string_util/graph_util.hpp"
 #include "sim_ds/bit_util.hpp"
 #include "sim_ds/BitVector.hpp"
-#include "SuccinctBitVector.hpp"
+#include "sim_ds/SuccinctBitVector.hpp"
 #include "sim_ds/log.hpp"
 
 namespace sim_ds {
@@ -94,7 +94,7 @@ public:
       //<< " : " << sbv_.accept(index)
       //<< std::endl;
 
-      if(sbv_.accept(index) == 1) {
+      if(sbv_.operator[](index) == 1) {
         return storage_[sbv_.rank(index)];
       }else {
         //return kEmptyChar;
