@@ -237,10 +237,10 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   
   // output ************************************
   std::cout
-  << "storage_ : " << size_vec(storage_) << " [B]\n"
-  << "code_table_ : " << size_vec(code_table_) << " [B]\n"
-  << "Rank_Dic & bit : " << sbv_.size_in_bytes() << " [B]\n"
-  << "All Size : " << size_vec(storage_) + size_vec(code_table_) + sbv_.size_in_bytes() << " [B]\n"
+  << "storage_ : " << size_vec(storage_) << " [B]" << std::endl 
+  << "code_table_ : " << size_vec(code_table_) << " [B]" << std::endl
+  << "Rank_Dic & bit : " << sbv_.size_in_bytes() << " [B]" << std::endl
+  << "All Size : " << size_vec(storage_) + size_vec(code_table_) + sbv_.size_in_bytes() << " [B]"
   << std::endl;
 }
 

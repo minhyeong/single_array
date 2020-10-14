@@ -50,7 +50,6 @@ int main() {
 		std::cout << "failed_num : " << failed_num << std::endl;
 	}
 
-
 	std::cout << "serch time / corpus : " << std::fixed << std::setprecision(8) 
 		<< (search_time / str_set.size()) << " [ms/word]" << std::endl;
 
