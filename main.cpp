@@ -4,6 +4,8 @@
 //#include "sdsl/rrr_vector.hpp"
 
 #define FILE_PATH "../corpus/Japan_Postal_Code.txt"
+//#define FILE_PATH "../corpus/en.txt"
+//#define FILE_PATH "../corpus/test_postal_code.txt"
 
 int main() {
 
@@ -44,7 +46,10 @@ int main() {
 	clock_t end = clock();
 	const double search_time = static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000.0;
 
-	std::cout << "failed_num : " << failed_num << std::endl;
+	if (failed_num != 0) {
+		std::cout << "failed_num : " << failed_num << std::endl;
+	}
+
 
 	std::cout << "serch time / corpus : " << std::fixed << std::setprecision(8) 
 		<< (search_time / str_set.size()) << " [ms/word]" << std::endl;

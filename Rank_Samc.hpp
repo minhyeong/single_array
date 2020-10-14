@@ -223,15 +223,6 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
     std::cerr << "used: " << std::fixed << std::setprecision(2) << " %" << per_used << std::endl << std::endl;
 #endif
   }
-
-  // Store character to storage_
-
-  
-  /*
-  07/21
-  rank 検索に不備があるかもしれない
-  一部rank検索が失敗している
-  */
   
   storage_temp = storage_;
   storage_.resize(head_.back(), kEmptyChar);
@@ -239,31 +230,18 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   
   for (auto i_c : storage_map){
     storage_[i_c.first] = i_c.second;
-    //std::cout << i_c.first << ":" << i_c.second << std::endl;
-    //if(i_c.second != kLeafChar){ // ビット列 問題なし
-    //  exist_flag_bits_.push_back(true);
-    //}else{
-    //  exist_flag_bits_.push_back(false);
-    //}
   }
 
-  //sbv_ = SuccinctBitVector<true>(std::move(exist_flag_bits_));
-  sbv_ = SuccinctBitVector<true>(std::move(storage_)); // テスト
-
-  // 空白埋め 問題なし
-  storage_temp = storage_;
+  sbv_ = SuccinctBitVector<true>(std::move(storage_));
   storage_.erase(std::remove(storage_.begin(), storage_.end(), NULL), storage_.end());
   
-
-  //std::cout << sbv_ << std::endl;
-
-
-
-
-  // new > 04/20 imamura
-  std::cout << "storage_ : " << storage_.size() * sizeof(char_type) << " [Byte]" << std::endl;
-  std::cout << "code_table_ : " << code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) << " [Byte]" << std::endl;
-  std::cout << "Single Array Size : " << storage_.size() * sizeof(char_type) + code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) << " [Byte]" << std::endl;
+  // output ************************************
+  std::cout
+  << "storage_ : " << size_vec(storage_) << " [B]\n"
+  << "code_table_ : " << size_vec(code_table_) << " [B]\n"
+  << "Rank_Dic & bit : " << sbv_.size_in_bytes() << " [B]\n"
+  << "All Size : " << size_vec(storage_) + size_vec(code_table_) + sbv_.size_in_bytes() << " [B]\n"
+  << std::endl;
 }
 
 template <typename CodeType>
