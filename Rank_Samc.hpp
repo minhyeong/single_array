@@ -244,6 +244,8 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   << std::endl;
 }
 
+
+//  ここがメイン文
 template <typename CodeType>
 template <typename T, typename S>
 _SamcImpl<CodeType>::_SamcImpl(const graph_util::Trie<T, S>& trie) {
@@ -267,7 +269,7 @@ _SamcImpl<CodeType>::_SamcImpl(const graph_util::Trie<T, S>& trie) {
       });
     }
 #ifndef NDEBUG
-    std::cerr << "ycheck for each char..." << std::endl;;
+    std::cerr << "ycheck for each char..." << std::endl;
 #endif
     BitVector empties;
     auto old_size = storage_.size();

@@ -3,7 +3,8 @@
 #include "Rank_Samc.hpp"
 //#include "sdsl/rrr_vector.hpp"
 
-#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
+//#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
+#define FILE_PATH "../corpus/examples"
 //#define FILE_PATH "../corpus/en.txt"
 //#define FILE_PATH "../corpus/test_postal_code.txt"
 
