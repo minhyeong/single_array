@@ -69,7 +69,7 @@ class _SamcImpl {
 public:
     using code_type = CodeType;
     using position_type = long long;
-    using char_type = uint8_t;
+    using char_type = uint8_t; //uint8_t
     static constexpr size_t kAlphabetSize = 0x100;
     static constexpr char_type kEmptyChar = kAlphabetSize-1;
     static constexpr char_type kLeafChar = 0;
@@ -212,9 +212,9 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   }
 
   // new > 04/20 imamura
-  std::cout << "storage_ : " << storage_.size() * sizeof(char_type) << " [Byte]" << std::endl;
-  std::cout << "code_table_ : " << code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) << " [Byte]" << std::endl;
-  std::cout << "Single Array Size : " << storage_.size() * sizeof(char_type) + code_table_.size() * sizeof(std::array<code_type, kAlphabetSize>) << " [Byte]" << std::endl;
+  std::cout << "storage_ : " << size_vec(storage_) << " [Byte]" << std::endl;
+  std::cout << "code_table_ : " << size_vec(code_table_) << " [Byte]" << std::endl;
+  std::cout << "Single Array Size : " << size_vec(storage_) + size_vec(code_table_) << " [Byte]" << std::endl;
 }
 
 template <typename CodeType>

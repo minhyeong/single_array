@@ -69,7 +69,7 @@ class _SamcImpl {
 public:
     using code_type = CodeType;
     using position_type = long long;
-    using char_type = uint8_t;
+    using char_type = uint8_t; // default 8
     static constexpr size_t kAlphabetSize = 0x100;
     static constexpr char_type kEmptyChar = kAlphabetSize-1;
     static constexpr char_type kLeafChar = 0;
@@ -97,10 +97,8 @@ public:
       if(sbv_.operator[](index) == 1) {
         return storage_[sbv_.rank(index)];
       }else {
-        //return kEmptyChar;
-        return NULL;
+        return kLeafChar;
       }
-      //return storage_[index];
     }
 
     code_type code(size_t depth, char_type c) const {return code_table_[depth][c];}
@@ -186,7 +184,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
     std::cerr << "ycheck for each char..." << std::endl;;
 #endif
     for (size_t c = 0; c < kAlphabetSize; c++) {
-      auto& indices = indices_table[c];
+      auto& indices = indices_table[c]; 
       if (indices.empty())
         continue;
 #ifndef NDEBUG
