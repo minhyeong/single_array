@@ -26,6 +26,7 @@ int main() {
 	} 
 
 	std::sort(str_set.begin(), str_set.end());
+	str_set.resize(str_set.size()/15); // ****
 	// make SAMC
 	sim_ds::Samc<uint32_t> samc(str_set.begin(), str_set.end());
 

@@ -184,7 +184,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
     std::cerr << "ycheck for each char..." << std::endl;;
 #endif
     for (size_t c = 0; c < kAlphabetSize; c++) {
-      auto& indices = indices_table[c]; 
+      auto& indices = indices_table[c];
       if (indices.empty())
         continue;
 #ifndef NDEBUG
