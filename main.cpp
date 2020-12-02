@@ -4,7 +4,8 @@
 //#include "sdsl/rrr_vector.hpp"
 
 //#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
-#define FILE_PATH "../corpus/dataset.txt"
+#define FILE_PATH "../corpus/en.txt"
+//#define FILE_PATH "../corpus/dataset.txt"
 //#define FILE_PATH "../corpus/enwiki-latest-all-titles-in-ns0"
 
 int main() {
@@ -26,7 +27,7 @@ int main() {
 	} 
 
 	std::sort(str_set.begin(), str_set.end());
-	str_set.resize(str_set.size()/15); // ****
+	// str_set.resize(str_set.size()/15); // ****
 	// make SAMC
 	sim_ds::Samc<uint32_t> samc(str_set.begin(), str_set.end());
 
@@ -39,7 +40,6 @@ int main() {
 	
 	for (auto& v : str_set) {
 		if (not samc.accept(v)) {
-			//std::cout << "accept : " << samc.accept(v) << std::endl;
 			failed_num++;
 		}
 	}

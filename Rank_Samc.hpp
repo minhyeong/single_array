@@ -84,16 +84,9 @@ protected:
 
 public:
     _SamcImpl() = default;
-    // Rank 関連 ***************************************************
+    // rank  ***************************************************
     char_type check(size_t index) const {
-
-      //std::cout 
-      //<< "index : rank : accept  ::  " << storage_temp[index] 
-      //<< " / " << storage_[sbv_.rank(index)] 
-      //<< " : " << index << " / " << sbv_.rank(index)
-      //<< " : " << sbv_.accept(index)
-      //<< std::endl;
-
+      std::cout << "index : " << index<< std::endl;
       if(sbv_.operator[](index) == 1) {
         return storage_[sbv_.rank(index)];
       }else {
@@ -221,10 +214,9 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
     std::cerr << "used: " << std::fixed << std::setprecision(2) << " %" << per_used << std::endl << std::endl;
 #endif
   }
-  
+  // now
   storage_temp = storage_;
-  storage_.resize(head_.back(), kEmptyChar);
-  
+  storage_.resize(head_.back(), kEmptyChar);  
   
   for (auto i_c : storage_map){
     storage_[i_c.first] = i_c.second;
@@ -232,6 +224,13 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
 
   sbv_ = SuccinctBitVector<true>(std::move(storage_));
   storage_.erase(std::remove(storage_.begin(), storage_.end(), NULL), storage_.end());
+  storage_.erase(std::remove(storage_.begin(), storage_.end(), kEmptyChar), storage_.end());
+
+  
+
+  //for(auto s : storage_){
+  //  std::cout << s << std::endl;
+  //}
   
   // output ************************************
   std::cout
@@ -240,6 +239,9 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   << "Rank_Dic & bit : " << sbv_.size_in_bytes() << " [B]" << std::endl
   << "All Size : " << size_vec(storage_) + size_vec(code_table_) + sbv_.size_in_bytes() << " [B]"
   << std::endl;
+
+  
+
 }
 
 
@@ -455,7 +457,7 @@ public:
     }
 
 private:
-    bool in_range(size_t index, size_t depth) const {
+    bool in_range(size_t index, size_t depth) const { // ここをどうにかしたい
       assert(depth > 0);
       return _base::head(depth) <= index and index < _base::head(depth+1);
     }
@@ -463,9 +465,8 @@ private:
     bool empty(size_t index) const {return _base::check(index) == _base::kEmptyChar;}
 
 };
-
 template <typename CodeType>
-bool
+bool // acc()
 Samc<CodeType>::accept(std::string_view key) const {
   size_t node = 0;
   size_t depth = 0;
@@ -474,8 +475,10 @@ Samc<CodeType>::accept(std::string_view key) const {
     auto target = node + _base::code(depth, c);
     if (not in_range(target, depth+1) or
         _base::check(target) != c) {
-      return false;
+          //std::cout << "" << _base::check(target) << " : " << c << std::endl;
+          return false;
     }
+    //std::cout << "" << _base::check(target) << " : " << c << std::endl;
     node = target;
   }
   auto terminal = node + _base::code(depth, kLeafChar);
