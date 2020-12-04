@@ -13,7 +13,7 @@
 #include "sim_ds/string_util/graph_util.hpp"
 #include "sim_ds/bit_util.hpp"
 #include "sim_ds/BitVector.hpp"
-#include "sim_ds/SuccinctBitVector.hpp"
+#include "SuccinctBitVector.hpp"
 #include "sim_ds/log.hpp"
 
 namespace sim_ds {
@@ -84,12 +84,15 @@ protected:
 
 public:
     _SamcImpl() = default;
-    // rank  ***************************************************
+    // rank****************************************************
     char_type check(size_t index) const {
-      std::cout << "index : " << index<< std::endl;
+      //std::cout << "index : " << index << std::endl;
+      
       if(sbv_.operator[](index) == 1) {
+        std::cout <<sbv_.operator[](index)<< " : "<< storage_[sbv_.rank(index)] << std::endl;
         return storage_[sbv_.rank(index)];
       }else {
+        //std::cout <<sbv_.operator[](index)<< " : "<< storage_[sbv_.rank(index)] << std::endl;
         return kLeafChar;
       }
     }
@@ -216,7 +219,8 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   }
   // now
   storage_temp = storage_;
-  storage_.resize(head_.back(), kEmptyChar);  
+  storage_.resize(head_.back(), kEmptyChar);
+
   
   for (auto i_c : storage_map){
     storage_[i_c.first] = i_c.second;
@@ -226,11 +230,10 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
   storage_.erase(std::remove(storage_.begin(), storage_.end(), NULL), storage_.end());
   storage_.erase(std::remove(storage_.begin(), storage_.end(), kEmptyChar), storage_.end());
 
-  
-
-  //for(auto s : storage_){
-  //  std::cout << s << std::endl;
+  //for(auto v : storage_){
+  //  std::cout << v << std::endl;
   //}
+  
   
   // output ************************************
   std::cout
@@ -466,16 +469,18 @@ private:
 
 };
 template <typename CodeType>
-bool // acc()
+bool // ac()****
 Samc<CodeType>::accept(std::string_view key) const {
   size_t node = 0;
   size_t depth = 0;
   for (; depth < key.size(); depth++) {
     uint8_t c = key[depth];
     auto target = node + _base::code(depth, c);
+    //std::cout << _base::check(target);
     if (not in_range(target, depth+1) or
         _base::check(target) != c) {
-          //std::cout << "" << _base::check(target) << " : " << c << std::endl;
+          //std::cout << std::endl;
+          //std::cout << ">" << _base::check(target) << " : " << c << std::endl;
           return false;
     }
     //std::cout << "" << _base::check(target) << " : " << c << std::endl;
