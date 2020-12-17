@@ -5,6 +5,7 @@
 
 //#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
 #define FILE_PATH "../corpus/en.txt"
+//#define FILE_PATH "../corpus/ja.txt"
 //#define FILE_PATH "../corpus/dataset.txt"
 //#define FILE_PATH "../corpus/enwiki-latest-all-titles-in-ns0"
 
