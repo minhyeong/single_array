@@ -138,7 +138,7 @@ size_t SuccinctBitVector<UseSelect>::rank_1(const size_t index) const {
          bit_util::width_mask<
              9>)+bit_util::cnt(bits_.data()[index / 64],
                                index % 64));  // cnt 先で 空要素分を削減させたい
-    return;
+    // return;
 }
 
 template <>
