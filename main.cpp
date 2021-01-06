@@ -4,11 +4,11 @@
 //#include "sdsl/rrr_vector.hpp"
 
 //#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
-//#define FILE_PATH "../corpus/en.txt"
+#define FILE_PATH "../corpus/en.txt"
+//#define FILE_PATH "../corpus/ken.txt"
 //#define FILE_PATH "../corpus/usa.txt"
-#define FILE_PATH "../corpus/K.txt"
-//#define FILE_PATH "../corpus/ja.txt"
-//#define FILE_PATH "../corpus/dataset.txt"
+//#define FILE_PATH "../corpus/0000_9999.txt"
+//#define FILE_PATH "../corpus/K.txt"
 //#define FILE_PATH "../corpus/enwiki-latest-all-titles-in-ns0"
 
 int main() {
@@ -24,16 +24,29 @@ int main() {
     }
     for (std::string s; getline(ifs, s);) {
         if (not s.empty()) {
-            // s = s.substr(1, 5);
+            // s = s.substr(1, 7);
             str_set.push_back(s);
         }
     }
 
-    // std::ofstream outputfile("../corpus/usa.txt");
-    // for (auto v : str_set) {
-    //    outputfile << v << "\n";
-    //}
-    // outputfile.close();
+    /*std::vector<std::string> str_0000_9999;
+    for (int i = 0; i <= 9999; i++) {
+        if (i < 10)
+            str_0000_9999.push_back("000" + std::to_string(i));
+        else if (i < 100)
+            str_0000_9999.push_back("00" + std::to_string(i));
+        else if (i < 1000)
+            str_0000_9999.push_back("0" + std::to_string(i));
+        else
+            str_0000_9999.push_back(std::to_string(i));
+    }
+    str_set = str_0000_9999;*/
+
+    /*std::ofstream outputfile("../corpus/ken.txt");
+    for (auto v : str_set) {
+        outputfile << v << "\n";
+    }
+    outputfile.close();*/
 
     std::sort(str_set.begin(), str_set.end());
     // str_set.resize(str_set.size()/15); // ****

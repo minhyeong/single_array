@@ -88,12 +88,12 @@ SuccinctBitVector<UseSelect>::SuccinctBitVector(BitVector&& bits)
     size_t basic_block_size = bits_.size() / 512 + 1;
     basic_block_.resize(basic_block_size * 2);
 
-    const auto* data = bits_.data();       // ビット列に変換？
-    size_t sum = bit_util::popcnt(*data);  // 1 ビットの出現数
-    uint64_t sum_word = 0;                 //
-    basic_block_[0] = basic_block_[1] = 0;  // basic_block_[1] が0の理由は？
+    const auto* data = bits_.data();        // ビット列に変換？
+    size_t sum = bit_util::popcnt(*data);   // 1 ビットの出現数
+    uint64_t sum_word = 0;                  //
+    basic_block_[0] = basic_block_[1] = 0;  // basic_block_[1] が0の理由は?
     size_t i = 0;
-    for (i = 1; i < bits_.size() / 64; i++) {  // 8byteで4分割?
+    for (i = 1; i < bits_.size() / 64; i++) {  // 大ブロックごとの記録
         if (i % 8 == 0) {
             size_t j = i / 8 * 2;
             basic_block_[j - 1] = sum_word;
@@ -104,11 +104,11 @@ SuccinctBitVector<UseSelect>::SuccinctBitVector(BitVector&& bits)
         }
         sum += bit_util::popcnt(*(++data));  // なぜ同じものを？
     }
-    if (i % 8 != 0) {
+    if (i % 8 != 0) {  // 小ブロックごとの記録
         size_t j = i / 8 * 2;
         sum_word |= sum << (63 - 9 * (i % 8));
         basic_block_[j + 1] = sum_word;
-    } else {
+    } else {  // 小ブロック全てのビットパターンに対する記録?
         size_t j = i / 8 * 2;
         basic_block_[j - 1] = sum_word;
         basic_block_[j] = basic_block_[j - 2] + sum;
@@ -132,13 +132,11 @@ template <bool UseSelect>
 size_t SuccinctBitVector<UseSelect>::rank_1(const size_t index) const {
     size_t block_index = index / 512 * 2;
     // std::cout << "test : " << "" <<std::endl;
-    return (
-        basic_block_[block_index] +
-        ((basic_block_[block_index + 1] >> (63 - 9 * ((index / 64) % 8))) &
-         bit_util::width_mask<
-             9>)+bit_util::cnt(bits_.data()[index / 64],
-                               index % 64));  // cnt 先で 空要素分を削減させたい
-    // return;
+    return (basic_block_[block_index] +
+            ((basic_block_[block_index + 1] >> (63 - 9 * ((index / 64) % 8))) &
+             bit_util::width_mask<9>)  // 下位 9 bitを抽出
+            +bit_util::cnt(bits_.data()[index / 64],
+                           index % 64));  // ビットパターンを探してる？
 }
 
 template <>

@@ -235,10 +235,21 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
               << size_vec(storage_) + size_vec(code_table_) << " [Byte]"
               << std::endl;
     /**/
+    int _0 = 0, _1 = 0;
     std::cout << "|";
     for (auto check : storage_) {  // check
-        std::cout << check << "|";
+        if (check == NULL) {
+            std::cout << "#|";
+            _1++;
+        } else if (check == kEmptyChar) {
+            std::cout << " |";
+            _0++;
+        } else {
+            std::cout << check << "|";
+            _1++;
+        }
     }
+
     std::cout << "\n\n" << std::endl;
     for (auto code : code_table_) {  // code
         for (auto c : code) {
@@ -247,6 +258,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         std::cout << std::endl;
     }
     std::cout << "\n\n" << std::endl;
+    std::cout << "0 : " << _0 << "\n1 : " << _1 << std::endl;
 }
 
 template <typename CodeType>

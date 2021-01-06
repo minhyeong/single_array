@@ -88,7 +88,6 @@ class _SamcImpl {
     // rank**
     char_type check(size_t index) const {
         // std::cout << "index : " << index << std::endl;
-
         if (sbv_.operator[](index) == 1) {
             // std::cout <<sbv_.operator[](index)<< " : "<<
             // storage_[sbv_.rank(index)] << std::endl;
@@ -233,22 +232,38 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
 #endif
     }
     // now
-    storage_temp = storage_;
     storage_.resize(head_.back(), kEmptyChar);
-
     for (auto i_c : storage_map) {
         storage_[i_c.first] = i_c.second;
     }
 
+    // storage_.erase(std::remove(storage_.begin(), storage_.end(), kEmptyChar),
+    //               storage_.end());
     sbv_ = SuccinctBitVector<true>(std::move(storage_));
-    storage_.erase(std::remove(storage_.begin(), storage_.end(), NULL),
-                   storage_.end());
-    storage_.erase(std::remove(storage_.begin(), storage_.end(), kEmptyChar),
-                   storage_.end());
 
     // for(auto v : storage_){
     //  std::cout << v << std::endl;
     //}
+
+    // 中身確認 **
+    std::cout << "|";
+    for (auto check : storage_) {  // check
+        if (check == NULL) {
+            std::cout << "#|";
+        } else if (check == kEmptyChar) {
+            std::cout << " |";
+        } else {
+            std::cout << check << "|";
+        }
+    }
+    std::cout << "\n\n" << std::endl;
+    for (auto code : code_table_) {  // code
+        for (auto c : code) {
+            std::cout << c << ",";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
 
     // output **
     std::cout << "storage_ : " << size_vec(storage_) << " [B]" << std::endl
@@ -504,11 +519,11 @@ Samc<CodeType>::accept(std::string_view key) const {
     for (; depth < key.size(); depth++) {
         uint8_t c = key[depth];
         auto target = node + _base::code(depth, c);
-        // std::cout << _base::check(target);
+        // std::cout << "code_: " << _base::code(depth, c) << std::endl;
         if (not in_range(target, depth + 1) or _base::check(target) != c) {
-            // std::cout << std::endl;
-            // std::cout << "> " << _base::check(target) << " : " << c <<
-            // std::endl;
+            std::cout << std::endl;
+            std::cout << "> " << _base::check(target) << " : " << c
+                      << std::endl;
             return false;
         }
         // std::cout << "" << _base::check(target) << " : " << c << std::endl;
