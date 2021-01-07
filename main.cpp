@@ -42,7 +42,7 @@ int main() {
     }
     str_set = str_0000_9999;*/
 
-    /*std::ofstream outputfile("../corpus/ken.txt");
+    /*std::ofstream outputfile("../corpus/en.txt");
     for (auto v : str_set) {
         outputfile << v << "\n";
     }

@@ -174,7 +174,8 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         std::cerr << "ycheck for each char..." << std::endl;
         ;
 #endif
-        for (size_t c = 0; c < kAlphabetSize; c++) {
+        // ** 01/07 この段階で子供が多い順に並び変えさせる必要あり
+        for (size_t c = 0; c < kAlphabetSize; c++) {  // 子供が多い順に変更
             auto& indices = indices_table[c];
             if (indices.empty()) continue;
 #ifndef NDEBUG
@@ -190,7 +191,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
             auto y_front = y_check_(indices, empty_bv);
             const size_t prev_height = head_[depth + 1] - head_[depth];
             auto code = prev_height + y_front;
-            code_table_[depth][c] = code;
+            code_table_[depth][c] = code;  // シフト数代入
             // std::cout << "code_table_[" << depth << "][" << c << "] = " <<
             // code
             //          << std::endl;
@@ -234,6 +235,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
     std::cout << "Single Array Size : "
               << size_vec(storage_) + size_vec(code_table_) << " [Byte]"
               << std::endl;
+
     /**/
     int _0 = 0, _1 = 0;
     std::cout << "|";
