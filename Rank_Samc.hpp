@@ -260,8 +260,8 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         storage_[i_c.first] = i_c.second;
     }
 
-    // storage_.erase(std::remove(storage_.begin(), storage_.end(), kEmptyChar),
-    //               storage_.end());
+    storage_.erase(std::remove(storage_.begin(), storage_.end(), kEmptyChar),
+                   storage_.end());
     sbv_ = SuccinctBitVector<true>(std::move(storage_));
 
     // for(auto v : storage_){
@@ -269,7 +269,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
     //}
 
     // 中身確認 **
-    std::cout << "|";
+    /*std::cout << "|";
     for (auto check : storage_) {  // check
         if (check == NULL) {
             std::cout << "#|";
@@ -286,7 +286,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         }
         std::cout << std::endl;
     }
-    std::cout << std::endl;
+    std::cout << std::endl;*/
 
     // output **
     std::cout << "storage_ : " << size_vec(storage_) << " [B]" << std::endl
@@ -544,9 +544,9 @@ Samc<CodeType>::accept(std::string_view key) const {
         auto target = node + _base::code(depth, c);
         // std::cout << "code_: " << _base::code(depth, c) << std::endl;
         if (not in_range(target, depth + 1) or _base::check(target) != c) {
-            std::cout << std::endl;
-            std::cout << "> " << _base::check(target) << " : " << c
-                      << std::endl;
+            // std::cout << std::endl;
+            // std::cout << "> " << _base::check(target) << " : " << c
+            //          << std::endl;
             return false;
         }
         // std::cout << "" << _base::check(target) << " : " << c << std::endl;

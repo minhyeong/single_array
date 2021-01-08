@@ -174,6 +174,8 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         std::cerr << "ycheck for each char..." << std::endl;
 
 #endif
+        //----------------------------------------------------------
+        // 降順区分
         std::vector<std::vector<size_t>> code_;
         for (size_t c = 0; c < kAlphabetSize; c++) {
             std::vector<size_t> tmp;
@@ -249,12 +251,14 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
     }
 
     /**/
-    /*int _0 = 0, _1 = 0;
+    /*
+    int _0 = 0, _1 = 0, fin = 0;
     std::cout << "|";
     for (auto check : storage_) {  // check
         if (check == NULL) {
             std::cout << "#|";
             _1++;
+            fin++;
         } else if (check == kEmptyChar) {
             std::cout << " |";
             _0++;
@@ -262,26 +266,24 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
             std::cout << check << "|";
             _1++;
         }
-    }*/
+    }
 
-    // new > 04/20 imamura
-    std::cout << "storage_ : " << size_vec(storage_) << " [Byte]" << std::endl;
-    std::cout << "code_table_ : " << size_vec(code_table_) << " [Byte]"
-              << std::endl;
-    std::cout << "Single Array Size : "
-              << size_vec(storage_) + size_vec(code_table_) << " [Byte]"
-              << std::endl;
-
-    /*std::cout << "\n\n" << std::endl;
+    std::cout << "\n" << std::endl;
     for (auto code : code_table_) {  // code
         for (auto c : code) {
             std::cout << c << ",";
         }
         std::cout << std::endl;
     }*/
+    std::cout << std::endl;
+    std::cout << "CHECK : " << size_vec(storage_) << " [Byte]" << std::endl;
+    std::cout << "CODE : " << size_vec(code_table_) << " [Byte]" << std::endl;
+    std::cout << "Array Size : " << size_vec(storage_) + size_vec(code_table_)
+              << " [Byte]" << std::endl;
     // std::cout << "\n" << std::endl;
     // std::cout << "0 : " << _0 << "\n1 : " << _1 << std::endl;
-}
+    // std::cout << "fin : " << fin << std::endl;
+}  // namespace sim_ds
 
 template <typename CodeType>
 template <typename T, typename S>

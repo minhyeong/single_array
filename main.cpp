@@ -1,12 +1,13 @@
 
-#include "Samc.hpp"
-//#include "Rank_Samc.hpp"
+//#include "Samc.hpp"
+#include "Rank_Samc.hpp"
 //#include "sdsl/rrr_vector.hpp"
 
 //#define FILE_PATH "../corpus/en.txt"
 //#define FILE_PATH "../corpus/ken.txt"
-#define FILE_PATH "../corpus/usa.txt"
-//#define FILE_PATH "../corpus/0000_9999.txt"
+//#define FILE_PATH "../corpus/usa.txt"
+#define FILE_PATH "../corpus/title_100000.txt"
+//#define FILE_PATH "../corpus/00000_99999.txt"
 //#define FILE_PATH "../corpus/K.txt"
 //#define FILE_PATH "../corpus/enwiki-latest-all-titles-in-ns0"
 
@@ -29,19 +30,21 @@ int main() {
     }
 
     /*std::vector<std::string> str_0000_9999;
-    for (int i = 0; i <= 9999; i++) {
+    for (int i = 0; i <= 99999; i++) {
         if (i < 10)
-            str_0000_9999.push_back("000" + std::to_string(i));
+            str_0000_9999.push_back("0000" + std::to_string(i));
         else if (i < 100)
-            str_0000_9999.push_back("00" + std::to_string(i));
+            str_0000_9999.push_back("000" + std::to_string(i));
         else if (i < 1000)
+            str_0000_9999.push_back("00" + std::to_string(i));
+        else if (i < 10000)
             str_0000_9999.push_back("0" + std::to_string(i));
         else
             str_0000_9999.push_back(std::to_string(i));
     }
     str_set = str_0000_9999;*/
 
-    /*std::ofstream outputfile("../corpus/en.txt");
+    /*std::ofstream outputfile("../corpus/00000_99999.txt");
     for (auto v : str_set) {
         outputfile << v << "\n";
     }
@@ -49,7 +52,7 @@ int main() {
 
     std::sort(str_set.begin(), str_set.end());
     // str_set.resize(str_set.size()/15); // ****
-    // make SAMC
+    // str_set.resize(100000);
     sim_ds::Samc<uint32_t> samc(str_set.begin(), str_set.end());
 
     ifs.seekg(0);
