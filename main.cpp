@@ -3,10 +3,9 @@
 //#include "Rank_Samc.hpp"
 //#include "sdsl/rrr_vector.hpp"
 
-//#define FILE_PATH "../corpus/Japan_Postal_Code.txt"
-#define FILE_PATH "../corpus/en.txt"
+//#define FILE_PATH "../corpus/en.txt"
 //#define FILE_PATH "../corpus/ken.txt"
-//#define FILE_PATH "../corpus/usa.txt"
+#define FILE_PATH "../corpus/usa.txt"
 //#define FILE_PATH "../corpus/0000_9999.txt"
 //#define FILE_PATH "../corpus/K.txt"
 //#define FILE_PATH "../corpus/enwiki-latest-all-titles-in-ns0"

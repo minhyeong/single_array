@@ -188,7 +188,30 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         std::cerr << "ycheck for each char..." << std::endl;
         ;
 #endif
+        // ** 01/07 この段階で子供が多い順に並び変えさせる必要あり
+        std::vector<std::vector<size_t>> code_;
         for (size_t c = 0; c < kAlphabetSize; c++) {
+            std::vector<size_t> tmp;
+            auto& indices = indices_table[c];
+            if (indices.empty()) continue;  // 空は無視
+            tmp.push_back(c);
+            tmp.push_back(indices.size());
+            code_.push_back(tmp);  // 文字 / 要素数
+        }
+        std::sort(  // 要素順にソート
+            code_.begin(), code_.end(),
+            [](const std::vector<size_t>& alpha,
+               const std::vector<size_t>& beta) { return alpha[1] > beta[1]; });
+
+        std::vector<size_t> code_out;  // 書き換えなくていいように
+        for (auto v : code_) {
+            code_out.push_back(v[0]);
+        }
+        code_.clear();
+        //----------------------------------------------------------
+
+        for (size_t c : code_out) {
+            // for (size_t c = 0; c < kAlphabetSize; c++) {
             auto& indices = indices_table[c];
             if (indices.empty()) continue;
 #ifndef NDEBUG

@@ -172,12 +172,34 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         code_table_.emplace_back();
 #ifndef NDEBUG
         std::cerr << "ycheck for each char..." << std::endl;
-        ;
+
 #endif
         // ** 01/07 この段階で子供が多い順に並び変えさせる必要あり
-        for (size_t c = 0; c < kAlphabetSize; c++) {  // 子供が多い順に変更
+        std::vector<std::vector<size_t>> code_;
+        for (size_t c = 0; c < kAlphabetSize; c++) {
+            std::vector<size_t> tmp;
             auto& indices = indices_table[c];
-            if (indices.empty()) continue;
+            if (indices.empty()) continue;  // 空は無視
+            tmp.push_back(c);
+            tmp.push_back(indices.size());
+            code_.push_back(tmp);  // 文字 / 要素数
+        }
+        /*std::sort(  // 要素順にソート
+            code_.begin(), code_.end(),
+            [](const std::vector<size_t>& alpha,
+               const std::vector<size_t>& beta) { return alpha[1] > beta[1];
+           });*/
+
+        std::vector<size_t> code_out;  // 書き換えなくていいように
+        for (auto v : code_) {
+            code_out.push_back(v[0]);
+        }
+        code_.clear();
+        //----------------------------------------------------------
+        for (size_t c : code_out) {
+            // for (size_t c = 0; c < kAlphabetSize; c++) {
+            auto& indices = indices_table[c];
+            // if (indices.empty()) continue;
 #ifndef NDEBUG
             std::cerr << c << ':' << uint8_t(c)
                       << ", indices: " << indices.size() << std::endl;
@@ -228,16 +250,8 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         storage_[i_c.first] = i_c.second;
     }
 
-    // new > 04/20 imamura
-    std::cout << "storage_ : " << size_vec(storage_) << " [Byte]" << std::endl;
-    std::cout << "code_table_ : " << size_vec(code_table_) << " [Byte]"
-              << std::endl;
-    std::cout << "Single Array Size : "
-              << size_vec(storage_) + size_vec(code_table_) << " [Byte]"
-              << std::endl;
-
     /**/
-    int _0 = 0, _1 = 0;
+    /*int _0 = 0, _1 = 0;
     std::cout << "|";
     for (auto check : storage_) {  // check
         if (check == NULL) {
@@ -250,17 +264,25 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
             std::cout << check << "|";
             _1++;
         }
-    }
+    }*/
 
-    std::cout << "\n\n" << std::endl;
+    // new > 04/20 imamura
+    std::cout << "storage_ : " << size_vec(storage_) << " [Byte]" << std::endl;
+    std::cout << "code_table_ : " << size_vec(code_table_) << " [Byte]"
+              << std::endl;
+    std::cout << "Single Array Size : "
+              << size_vec(storage_) + size_vec(code_table_) << " [Byte]"
+              << std::endl;
+
+    /*std::cout << "\n\n" << std::endl;
     for (auto code : code_table_) {  // code
         for (auto c : code) {
             std::cout << c << ",";
         }
         std::cout << std::endl;
-    }
-    std::cout << "\n\n" << std::endl;
-    std::cout << "0 : " << _0 << "\n1 : " << _1 << std::endl;
+    }*/
+    // std::cout << "\n" << std::endl;
+    // std::cout << "0 : " << _0 << "\n1 : " << _1 << std::endl;
 }
 
 template <typename CodeType>
