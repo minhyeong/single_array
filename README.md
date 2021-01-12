@@ -1,17 +1,39 @@
+# SingleArrayの研究用
 
-# Single Array
-
-## SingleArrayの研究用
-
-使用 Module
-https://github.com/MatsuTaku/SimpleDataStructure.git
-
-## 何かのメモ
-- テンプレートの派生クラスから親クラスのメンバへのアクセス
-    - 問題のメンバに"this->"をつけると問題解決
-    - テンプレートを含む場合の名前解決が通常の場合と異なるかららしい
+## 環境
+- gcc 9.3.0
+- boost 107500
     ```
-    this->write_vec(storage_, os);
+    git submodule update --init
+    mkdir build
+    cd build
+    cmake ..
+    make
     ```
-- std::string_view の参照エラー
-    - C++17以上であれば問題ないが, 参照エラー表示がでる
+    - 通らない場合 CMakeLists.txt の28行目を下記に変更
+        ```
+        target_link_libraries(main PRIVATE sim_ds) /// sdsl を使わないため
+        ```
+
+## 暫定出力結果
+- データセット
+    - [enwiki-latest-all-titles-in-ns0.gz](https://dumps.wikimedia.org/enwiki/latest/)
+        - ソート後 100,000 文字分使用
+            - 大きすぎるとメモリフロー起こす
+
+### SAMC
+```
+CHECK : 778327786 [Byte]
+CODE : 225288 [Byte]
+Array Size : 778553074 [Byte]
+serch time / corpus : 0.00168506 [ms/word]
+```
+
+### RANK
+```
+storage_ : 1283016 [B]
+code_table_ : 225288 [B]
+Rank_Dic & bit : 209748 [B]
+All Size : 1718052 [B]
+serch time / corpus : 未計測
+```

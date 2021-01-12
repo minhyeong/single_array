@@ -85,6 +85,7 @@ SuccinctBitVector<UseSelect>::SuccinctBitVector(BitVector&& bits)
         return;
     }
     // https://takeda25.hatenablog.jp/entry/20140201/1391250137
+    //----------------------------------------------------------------------------
     size_t basic_block_size = bits_.size() / 512 + 1;
     basic_block_.resize(basic_block_size * 2);
 
@@ -106,7 +107,7 @@ SuccinctBitVector<UseSelect>::SuccinctBitVector(BitVector&& bits)
     }
     if (i % 8 != 0) {  // 小ブロックごとの記録
         size_t j = i / 8 * 2;
-        sum_word |= sum << (63 - 9 * (i % 8));
+        sum_word |= sum << (63 - 9 * (i % 8)); 
         basic_block_[j + 1] = sum_word;
     } else {  // 小ブロック全てのビットパターンに対する記録?
         size_t j = i / 8 * 2;
@@ -114,7 +115,7 @@ SuccinctBitVector<UseSelect>::SuccinctBitVector(BitVector&& bits)
         basic_block_[j] = basic_block_[j - 2] + sum;
         basic_block_[j + 1] = 0;
     }
-
+    //----------------------------------------------------------------------------
     if constexpr (UseSelect) {
         size_t sum_threshold = 512;
         select_tips_.push_back(0);
