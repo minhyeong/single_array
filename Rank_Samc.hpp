@@ -9,8 +9,9 @@
 
 #include <iterator>
 
+#include "BitVector.hpp"
 #include "SuccinctBitVector.hpp"
-#include "sim_ds/BitVector.hpp"
+//#include "sim_ds/BitVector.hpp"
 #include "sim_ds/basic.hpp"
 #include "sim_ds/bit_util.hpp"
 #include "sim_ds/log.hpp"
@@ -74,7 +75,6 @@ class _SamcImpl {
     static constexpr size_t kAlphabetSize = 0x100;
     static constexpr char_type kEmptyChar = kAlphabetSize - 1;
     static constexpr char_type kLeafChar = 0;
-    
 
    protected:
     std::vector<char_type> storage_;
@@ -261,19 +261,28 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         storage_[i_c.first] = i_c.second;
     }
 
-    /*for(auto v:storage_){ // ビット変換した場合
-        if(v==kEmptyChar)
-            std::cout<<"0";
-        else if(v==kLeafChar)
-            std::cout <<"#";
-        else
+    /*for (auto v : storage_) {  // ビット変換した場合
+        // std::ofstream outputfile("../corpus/a_out.txt",
+        //                         std::ios::app);  // 保存用
+        if (v == kEmptyChar) {
+            // outputfile << v;
+            // outputfile.close();
+            std::cout << "0";
+        } else if (v == kLeafChar) {
+            // outputfile << v;
+            // outputfile.close();
+            std::cout << "#";
+        } else {
+            // outputfile << v;
+            // outputfile.close();
             std::cout << "1";
+        }
     }
-    std::cout <<"\n";*/
+    std::cout << "\n";*/
 
-    
     sbv_ = SuccinctBitVector<true>(std::move(storage_));
-    storage_.erase(std::remove(storage_.begin(), storage_.end(), kEmptyChar), storage_.end());
+    storage_.erase(std::remove(storage_.begin(), storage_.end(), kEmptyChar),
+                   storage_.end());
 
     // for(auto v : storage_){
     //  std::cout << v << std::endl;
@@ -523,7 +532,8 @@ class Samc : _SamcImpl<CodeType> {
 
     template <typename T, typename S>
     [[deprecated(
-        "Maybe consume much memory. You should construct from string-iterator "
+        "Maybe consume much memory. You should construct from "
+        "string-iterator "
         "like (begin end)")]] explicit Samc(const input_trie<T, S>& trie)
         : _base(trie) {}
 
@@ -536,7 +546,8 @@ class Samc : _SamcImpl<CodeType> {
     void Read(std::istream& is) { _base::Read(is); }
 
    private:
-    bool in_range(size_t index, size_t depth) const {  // ここをどうにかしたい
+    bool in_range(size_t index,
+                  size_t depth) const {  // ここをどうにかしたい
         assert(depth > 0);
         return _base::head(depth) <= index and index < _base::head(depth + 1);
     }
@@ -560,7 +571,8 @@ Samc<CodeType>::accept(std::string_view key) const {
             //          << std::endl;
             return false;
         }
-        // std::cout << "" << _base::check(target) << " : " << c << std::endl;
+        // std::cout << "" << _base::check(target) << " : " << c <<
+        // std::endl;
         node = target;
     }
     auto terminal = node + _base::code(depth, kLeafChar);
