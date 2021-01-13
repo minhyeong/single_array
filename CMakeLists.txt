@@ -25,6 +25,7 @@ add_executable(main main.cpp)
 set(BOOST_ROOT "C:/boost_1_70_0")
 
 add_subdirectory(SimpleDataStructure EXCLUDE_FROM_ALL)
+#add_subdirectory(sdsl-lite EXCLUDE_FROM_ALL)
 target_link_libraries(main PRIVATE sim_ds sdsl)
 #target_link_libraries(main sim_ds)
 

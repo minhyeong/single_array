@@ -25,10 +25,6 @@ class SuccinctBitVector {
     std::vector<uint32_t> select_tips_;
 
    public:
-    using char_type = uint8_t;                                  // default 8
-    static constexpr size_t kAlphabetSize = 0x100;              // 修正用
-    static constexpr char_type kEmptyChar = kAlphabetSize - 1;  // 修正用
-
     SuccinctBitVector() = default;
 
     explicit SuccinctBitVector(BitVector&& bits);
@@ -78,32 +74,31 @@ class SuccinctBitVector {
 };
 
 template <bool UseSelect>
-SuccinctBitVector<UseSelect>::SuccinctBitVector(BitVector&& bits)
-    : bits_(std::forward<BitVector>(bits)) {
+SuccinctBitVector<UseSelect>::SuccinctBitVector(BitVector&& bits) : bits_(std::forward<BitVector>(bits)) {
     if (bits_.empty()) {
         basic_block_.assign(2, 0);
         return;
     }
     // https://takeda25.hatenablog.jp/entry/20140201/1391250137
     //----------------------------------------------------------------------------
-    size_t basic_block_size = bits_.size() / 512 + 1;
+    size_t basic_block_size = bits_.size() / 512 + 1; // 最初のブロックのrankを数えるため
     basic_block_.resize(basic_block_size * 2);
 
-    const auto* data = bits_.data();        // ビット列に変換？
+    const auto* data = bits_.data();        // ビット列に変換
     size_t sum = bit_util::popcnt(*data);   // 1 ビットの出現数
-    uint64_t sum_word = 0;                  //
-    basic_block_[0] = basic_block_[1] = 0;  // basic_block_[1] が0の理由は?
+    uint64_t sum_word = 0;                  // ワード総数？
+    basic_block_[0] = basic_block_[1] = 0;  // basic_block_[1] が0の理由は? ヘッダ?
     size_t i = 0;
     for (i = 1; i < bits_.size() / 64; i++) {  // 大ブロックごとの記録
-        if (i % 8 == 0) {
+        if (i % 8 == 0) { // 8ビットごとに初期化?
             size_t j = i / 8 * 2;
             basic_block_[j - 1] = sum_word;
-            basic_block_[j] = basic_block_[j - 2] + sum;
+            basic_block_[j] = basic_block_[j - 2] + sum; // 
             sum_word = sum = 0;
         } else {
-            sum_word |= sum << (63 - 9 * (i % 8));  // ??
+            sum_word |= sum << (63 - 9 * (i % 8));  // 63~0 で何をしてるのか
         }
-        sum += bit_util::popcnt(*(++data));  // なぜ同じものを？
+        sum += bit_util::popcnt(*(++data));  // 次のブロックの１の総数を代入
     }
     if (i % 8 != 0) {  // 小ブロックごとの記録
         size_t j = i / 8 * 2;
@@ -131,13 +126,21 @@ SuccinctBitVector<UseSelect>::SuccinctBitVector(BitVector&& bits)
 
 template <bool UseSelect>
 size_t SuccinctBitVector<UseSelect>::rank_1(const size_t index) const {
-    size_t block_index = index / 512 * 2;
-    // std::cout << "test : " << "" <<std::endl;
-    return (basic_block_[block_index] +
-            ((basic_block_[block_index + 1] >> (63 - 9 * ((index / 64) % 8))) &
-             bit_util::width_mask<9>)  // 下位 9 bitを抽出
-            +bit_util::cnt(bits_.data()[index / 64],
-                           index % 64));  // ビットパターンを探してる？
+    size_t block_index = index / 512 * 2; // 大ブロックを超える場合、大ブロック分をそのまま加算
+
+   /*std::cout << "basic_block_["<<block_index<<"] : "<<basic_block_[block_index] <<std::endl
+                  << "basic_block_["<<block_index + 1<<"] : "<<basic_block_[block_index+1]<<std::endl
+                  << " (63 - 9 * ((index / 64) % 8))) : "<< ( 63 - 9 * ( (index / 64) % 8 )) << std::endl
+                  << "bit_util::width_mask<9> >> " << 
+                  ((basic_block_[block_index + 1] >> 
+                  (63 - 9 * ((index / 64) % 8)))& bit_util::width_mask<9>) << std::endl
+                  << "bit_util::cnt(bits_.data()[index / 64], index % 64) : "
+                  << (bit_util::cnt(bits_.data()[index / 64], index % 64))<<std::endl;*/
+
+    return (basic_block_[block_index] + // 以前のブロックの１ビットの総数
+            ((basic_block_[block_index + 1] >> (63 - 9 * ((index / 64) % 8))) // 小ブロックの
+                 & bit_util::width_mask<9> )  // 上の場所の下位 9 bitを抽出
+            +bit_util::cnt(bits_.data()[index / 64], index % 64));  // 現在位置をビットに置き換えて検索?
 }
 
 template <>

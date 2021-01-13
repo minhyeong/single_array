@@ -5,7 +5,8 @@
 
 //#define FILE_PATH "../corpus/title_100000.txt"
 
-#define FILE_PATH "../corpus/en.txt"
+//#define FILE_PATH "../corpus/en.txt"
+#define FILE_PATH "../corpus/test.txt"
 //#define FILE_PATH "../corpus/ken.txt"
 //#define FILE_PATH "../corpus/usa.txt"
 

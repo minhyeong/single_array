@@ -85,7 +85,7 @@ class _SamcImpl {
 
    public:
     _SamcImpl() = default;
-    // rank**
+    // rank **
     char_type check(size_t index) const {
         // std::cout << "index : " << index << std::endl;
         if (sbv_.operator[](index) == 1) {
@@ -260,9 +260,8 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         storage_[i_c.first] = i_c.second;
     }
 
-    storage_.erase(std::remove(storage_.begin(), storage_.end(), kEmptyChar),
-                   storage_.end());
     sbv_ = SuccinctBitVector<true>(std::move(storage_));
+    storage_.erase(std::remove(storage_.begin(), storage_.end(), kEmptyChar), storage_.end());
 
     // for(auto v : storage_){
     //  std::cout << v << std::endl;
@@ -535,7 +534,7 @@ class Samc : _SamcImpl<CodeType> {
     }
 };
 template <typename CodeType>
-bool  // ac()****
+bool  // ac() **
 Samc<CodeType>::accept(std::string_view key) const {
     size_t node = 0;
     size_t depth = 0;
