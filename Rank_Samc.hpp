@@ -74,6 +74,7 @@ class _SamcImpl {
     static constexpr size_t kAlphabetSize = 0x100;
     static constexpr char_type kEmptyChar = kAlphabetSize - 1;
     static constexpr char_type kLeafChar = 0;
+    
 
    protected:
     std::vector<char_type> storage_;
@@ -260,6 +261,17 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         storage_[i_c.first] = i_c.second;
     }
 
+    /*for(auto v:storage_){ // ビット変換した場合
+        if(v==kEmptyChar)
+            std::cout<<"0";
+        else if(v==kLeafChar)
+            std::cout <<"#";
+        else
+            std::cout << "1";
+    }
+    std::cout <<"\n";*/
+
+    
     sbv_ = SuccinctBitVector<true>(std::move(storage_));
     storage_.erase(std::remove(storage_.begin(), storage_.end(), kEmptyChar), storage_.end());
 

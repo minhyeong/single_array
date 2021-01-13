@@ -8,7 +8,7 @@
 #ifndef SuccinctBitVector_hpp
 #define SuccinctBitVector_hpp
 
-#include "sim_ds/BitVector.hpp"
+#include "BitVector.hpp"
 
 namespace sim_ds {
 
@@ -74,15 +74,22 @@ class SuccinctBitVector {
 };
 
 template <bool UseSelect>
-SuccinctBitVector<UseSelect>::SuccinctBitVector(BitVector&& bits) : bits_(std::forward<BitVector>(bits)) {
+SuccinctBitVector<UseSelect>::SuccinctBitVector(BitVector&& bits) : 
+bits_(std::forward<BitVector>(bits)) {
     if (bits_.empty()) {
         basic_block_.assign(2, 0);
         return;
     }
+    
     // https://takeda25.hatenablog.jp/entry/20140201/1391250137
     //----------------------------------------------------------------------------
     size_t basic_block_size = bits_.size() / 512 + 1; // 最初のブロックのrankを数えるため
     basic_block_.resize(basic_block_size * 2);
+    
+    /*for(auto v:bits_){
+        std::cout << v;
+    }
+    std::cout<<"\n";*/    
 
     const auto* data = bits_.data();        // ビット列に変換
     size_t sum = bit_util::popcnt(*data);   // 1 ビットの出現数
