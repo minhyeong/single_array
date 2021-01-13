@@ -179,15 +179,26 @@ class BitVector : private _BitVector {
         static constexpr char_type kEmptyChar = kAlphabetSize - 1;
         std::transform(bits.begin(), bits.end(), _base::_make_iter(0),
                        [](auto b) {
-                           // std::cout << b;
-                           if (b == kEmptyChar) {  // 空白
+                           if (b == kEmptyChar)
                                return bool(false);
-                           } else {
+                           else
                                return bool(true);
-                           }
                        });
-        // std::cout << std::endl;
     }
+
+    /*template <typename BitArray>
+    BitVector(const BitArray& bits) : _base(bits.size()) {  // これ使う
+        std::transform(
+            bits.begin(), bits.end(), _base::_make_iter(0), [](auto b) {
+                using char_type = uint8_t;  // default 8
+                static constexpr size_t kAlphabetSize = 0x100;
+                static constexpr char_type kEmptyChar = kAlphabetSize - 1;
+                if (b == kEmptyChar)
+                    return bool(false);
+                else
+                    return bool(b);
+            });
+    }*/
 
     reference operator[](size_t index) { return _base::_make_ref(index); }
 

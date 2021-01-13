@@ -61,11 +61,9 @@ int main() {
     //  time measur
     clock_t start = clock();
 
-    for (int i = 0; i < 100; i++) {
-        for (auto& v : str_set) {
-            if (not samc.accept(v)) {
-                failed_num++;
-            }
+    for (auto& v : str_set) {
+        if (not samc.accept(v)) {
+            failed_num++;
         }
     }
 
@@ -77,8 +75,7 @@ int main() {
         std::cout << "failed_num : " << failed_num << std::endl;
 
     std::cout << "serch time / corpus : " << std::fixed << std::setprecision(8)
-              << (search_time / (str_set.size() * 100)) << " [ms/word]"
-              << std::endl;
+              << (search_time / (str_set.size())) << " [ms/word]" << std::endl;
 
     return 0;
 }
