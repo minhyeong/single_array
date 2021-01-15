@@ -1,19 +1,20 @@
 
+
 //#include "Samc.hpp"
 #include "Rank_Samc.hpp"
 //#include "sdsl/rrr_vector.hpp"
 
-#define FILE_PATH "../corpus/title_100000.txt"
-//#define FILE_PATH "../corpus/title_10000.txt"
+//#define FILE_PATH "../corpus/title_100000.txt"
+//#define FILE_PATH "../corpus/title.txt"
 
-//#define FILE_PATH "../corpus/en.txt"
+#define FILE_PATH "../corpus/en.txt"
 //#define FILE_PATH "../corpus/test.txt"
 //#define FILE_PATH "../corpus/ken.txt"
 //#define FILE_PATH "../corpus/usa.txt"
 
 int main() {
     std::ifstream ifs(FILE_PATH);
-    std::vector<std::string> str_set;
+    std::vector<std::string> str_set, find_set;
 
     // Loading Corpus
     if (ifs.fail()) {
@@ -24,7 +25,10 @@ int main() {
     }
     for (std::string s; getline(ifs, s);) {
         if (not s.empty()) {
+            find_set.push_back(s);
             // s = s.substr(1, 7);
+            s[s.size()-1]|= (1 << 7); // 終端文字を変換
+            std::cout <<" : "<< s <<std::endl;
             str_set.push_back(s);
         }
     }
@@ -51,6 +55,7 @@ int main() {
     outputfile.close();*/
 
     std::sort(str_set.begin(), str_set.end());
+    
     // str_set.resize(str_set.size()/15); // ****
     // str_set.resize(100000);
     sim_ds::Samc<uint32_t> samc(str_set.begin(), str_set.end());
@@ -61,7 +66,7 @@ int main() {
     //  time measur
     clock_t start = clock();
 
-    for (auto& v : str_set) {
+    for (auto& v : find_set) {
         if (not samc.accept(v)) {
             failed_num++;
         }
