@@ -1,13 +1,13 @@
 
-
 //#include "Samc.hpp"
-#include "Rank_Samc.hpp"
+//#include "Rank_Samc.hpp"
+#include "Rank_MSB.hpp"  // 終端ないバージョン
 //#include "sdsl/rrr_vector.hpp"
 
-//#define FILE_PATH "../corpus/title_100000.txt"
+#define FILE_PATH "../corpus/title_100000.txt"
 //#define FILE_PATH "../corpus/title.txt"
 
-#define FILE_PATH "../corpus/en.txt"
+//#define FILE_PATH "../corpus/en.txt"
 //#define FILE_PATH "../corpus/test.txt"
 //#define FILE_PATH "../corpus/ken.txt"
 //#define FILE_PATH "../corpus/usa.txt"
@@ -27,8 +27,8 @@ int main() {
         if (not s.empty()) {
             find_set.push_back(s);
             // s = s.substr(1, 7);
-            s[s.size()-1]|= (1 << 7); // 終端文字を変換
-            std::cout <<" : "<< s <<std::endl;
+            s[s.size() - 1] |= (1 << 7);  // MSB
+            // std::cout << " : " << s << std::endl;
             str_set.push_back(s);
         }
     }
@@ -55,7 +55,7 @@ int main() {
     outputfile.close();*/
 
     std::sort(str_set.begin(), str_set.end());
-    
+
     // str_set.resize(str_set.size()/15); // ****
     // str_set.resize(100000);
     sim_ds::Samc<uint32_t> samc(str_set.begin(), str_set.end());

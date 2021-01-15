@@ -216,6 +216,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
             // for (size_t c = 0; c < kAlphabetSize; c++) {
             auto& indices = indices_table[c];
             if (indices.empty()) continue;
+            if (c == kLeafChar) continue;  // 終端文字削除
 #ifndef NDEBUG
             std::cerr << c << ':' << uint8_t(c)
                       << ", indices: " << indices.size() << std::endl;
@@ -565,15 +566,17 @@ Samc<CodeType>::accept(std::string_view key) const {
     for (; depth < key.size(); depth++) {
         uint8_t c = key[depth];
         auto target = node + _base::code(depth, c);
-        // std::cout << "code_: " << _base::code(depth, c) << std::endl;
-        if (not in_range(target, depth + 1) or _base::check(target) != c) {
-            // std::cout << std::endl;
-            // std::cout << "> " << _base::check(target) << " : " << c
-            //          << std::endl;
-            return false;
+        if (key.size() - 1 == depth) {
+            c |= (1 << 7);
+            target = node + _base::code(depth, c);
+            if (in_range(target, depth + 1) and _base::check(target) == c) {
+                return true;
+            }
+        } else {
+            if (not in_range(target, depth + 1) or _base::check(target) != c) {
+                return false;
+            }
         }
-        // std::cout << "" << _base::check(target) << " : " << c <<
-        // std::endl;
         node = target;
     }
     auto terminal = node + _base::code(depth, kLeafChar);
