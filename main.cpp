@@ -4,9 +4,14 @@
 #include "Rank_MSB.hpp"  // 終端ないバージョン
 //#include "sdsl/rrr_vector.hpp"
 
-#define FILE_PATH "../corpus/title_100000.txt"
-//#define FILE_PATH "../corpus/title.txt"
+// dataset > 比較用データセット群
+//#define FILE_PATH "../dataset/title_100000.txt"
+#define FILE_PATH "../dataset/ja_3word_list.txt"
+//#define FILE_PATH "../dataset/ja_word_list.txt"
+//#define FILE_PATH "../dataset/en_3word_list.txt"
+//#define FILE_PATH "../dataset/en_word_list.txt"
 
+// corpus テスト用データセット群
 //#define FILE_PATH "../corpus/en.txt"
 //#define FILE_PATH "../corpus/test.txt"
 //#define FILE_PATH "../corpus/ken.txt"
