@@ -82,7 +82,9 @@ class _SamcImpl {
     std::vector<char_type> storage_temp;
     std::vector<bool> exist_flag_bits_;  //
     SuccinctBitVector<true> sbv_;        //
-    std::vector<std::array<code_type, kAlphabetSize>> code_table_;
+    // std::vector<std::array<code_type, kAlphabetSize>> code_table_;
+    std::vector<std::array<code_type, 20>> code_table_;  // zipcode 用
+    // 終端文字込み 必要最低数
     std::vector<code_type> head_;
 
    public:
@@ -230,7 +232,8 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
             auto y_front = y_check_(indices, empty_bv);
             const size_t prev_height = head_[depth + 1] - head_[depth];
             auto code = prev_height + y_front;
-            code_table_[depth][c] = code;
+            // code_table_[depth][c] = code;
+            code_table_[depth][c - 48] = code;  // zipcode 用
             for (size_t i = 0; i < indices.size(); i++) {
                 size_t index = head_[depth] + indices[i] + code;
                 //#ifndef NDEBUG
@@ -263,7 +266,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         storage_[i_c.first] = i_c.second;
     }
 
-    for (auto v : storage_) {  // ビット変換した場合
+    /*for (auto v : storage_) {  // ビット変換した場合
         // std::ofstream outputfile("../corpus/a_out.txt",
         //                         std::ios::app);  // 保存用
         if (v == kEmptyChar) {
@@ -280,7 +283,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
             std::cout << "1";
         }
     }
-    std::cout << "\n";
+    std::cout << "\n";*/
 
     sbv_ = SuccinctBitVector<true>(std::move(storage_));
     storage_.erase(std::remove(storage_.begin(), storage_.end(), kEmptyChar),
@@ -548,8 +551,7 @@ class Samc : _SamcImpl<CodeType> {
     void Read(std::istream& is) { _base::Read(is); }
 
    private:
-    bool in_range(size_t index,
-                  size_t depth) const {  // ここをどうにかしたい
+    bool in_range(size_t index, size_t depth) const {
         assert(depth > 0);
         return _base::head(depth) <= index and index < _base::head(depth + 1);
     }
@@ -565,7 +567,7 @@ Samc<CodeType>::accept(std::string_view key) const {
     size_t depth = 0;
     for (; depth < key.size(); depth++) {
         uint8_t c = key[depth];
-        auto target = node + _base::code(depth, c);
+        auto target = node + _base::code(depth, c - 48);
         if (key.size() - 1 == depth) {
             c |= (1 << 7);
             target = node + _base::code(depth, c);
@@ -578,6 +580,9 @@ Samc<CodeType>::accept(std::string_view key) const {
             }
         }
         node = target;
+    }
+    if (depth == key.size()) {
+        return true;
     }
     auto terminal = node + _base::code(depth, kLeafChar);
     return (in_range(terminal, depth + 1) and

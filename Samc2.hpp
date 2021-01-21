@@ -1,4 +1,3 @@
-
 //
 //  Samc.hpp
 //
@@ -10,9 +9,8 @@
 
 #include <iterator>
 
-#include "BitVector.hpp"
-#include "SuccinctBitVector.hpp"
-//#include "sim_ds/BitVector.hpp"
+#include "sim_ds/BitVector.hpp"
+#include "sim_ds/SuccinctBitVector.hpp"
 #include "sim_ds/basic.hpp"
 #include "sim_ds/bit_util.hpp"
 #include "sim_ds/log.hpp"
@@ -72,34 +70,20 @@ class _SamcImpl {
    public:
     using code_type = CodeType;
     using position_type = long long;
-    using char_type = uint8_t;  // default 8
+    using char_type = uint8_t;  // uint8_t
     static constexpr size_t kAlphabetSize = 0x100;
     static constexpr char_type kEmptyChar = kAlphabetSize - 1;
     static constexpr char_type kLeafChar = 0;
 
    protected:
     std::vector<char_type> storage_;
-    std::vector<char_type> storage_temp;
-    std::vector<bool> exist_flag_bits_;  //
-    SuccinctBitVector<true> sbv_;        //
-    std::vector<std::array<code_type, kAlphabetSize>> code_table_;
+    std::vector<std::array<code_type, 10>> code_table_;  // 0~9
     std::vector<code_type> head_;
 
    public:
     _SamcImpl() = default;
-    // rank **
-    char_type check(size_t index) const {
-        // std::cout << "index : " << index << std::endl;
-        if (sbv_.operator[](index) == 1) {
-            // std::cout <<sbv_.operator[](index)<< " : "<<
-            // storage_[sbv_.rank(index)] << std::endl;
-            return storage_[sbv_.rank(index)];
-        } else {
-            // std::cout <<sbv_.operator[](index)<< " : "<<
-            // storage_[sbv_.rank(index)] << std::endl;
-            return kLeafChar;
-        }
-    }
+
+    char_type check(size_t index) const { return storage_[index]; }
 
     code_type code(size_t depth, char_type c) const {
         return code_table_[depth][c];
@@ -188,9 +172,10 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         code_table_.emplace_back();
 #ifndef NDEBUG
         std::cerr << "ycheck for each char..." << std::endl;
-        ;
+
 #endif
-        // ** 01/07 この段階で子供が多い順に並び変えさせる必要あり
+        //----------------------------------------------------------
+        // 降順区分
         std::vector<std::vector<size_t>> code_;
         for (size_t c = 0; c < kAlphabetSize; c++) {
             std::vector<size_t> tmp;
@@ -200,7 +185,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
             tmp.push_back(indices.size());
             code_.push_back(tmp);  // 文字 / 要素数
         }
-        std::sort(  // 要素順にソート
+        std::sort(  // 要素数降順
             code_.begin(), code_.end(),
             [](const std::vector<size_t>& alpha,
                const std::vector<size_t>& beta) { return alpha[1] > beta[1]; });
@@ -211,11 +196,11 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         }
         code_.clear();
         //----------------------------------------------------------
-
         for (size_t c : code_out) {
+            if (c == kLeafChar) continue;  // 終端文字削除
             // for (size_t c = 0; c < kAlphabetSize; c++) {
             auto& indices = indices_table[c];
-            if (indices.empty()) continue;
+            // if (indices.empty()) continue;
 #ifndef NDEBUG
             std::cerr << c << ':' << uint8_t(c)
                       << ", indices: " << indices.size() << std::endl;
@@ -229,7 +214,11 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
             auto y_front = y_check_(indices, empty_bv);
             const size_t prev_height = head_[depth + 1] - head_[depth];
             auto code = prev_height + y_front;
-            code_table_[depth][c] = code;
+            // code_table_[depth][c] = code;  // シフト数代入
+            code_table_[depth][c - 48] = code;
+            // std::cout << "code_table_[" << depth << "][" << c << "] = " <<
+            // code
+            //          << std::endl;
             for (size_t i = 0; i < indices.size(); i++) {
                 size_t index = head_[depth] + indices[i] + code;
                 //#ifndef NDEBUG
@@ -256,72 +245,48 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
                   << std::endl;
 #endif
     }
-    // now
+
+    // Store character to storage_
     storage_.resize(head_.back(), kEmptyChar);
     for (auto i_c : storage_map) {
         storage_[i_c.first] = i_c.second;
     }
 
-    /*for (auto v : storage_) {  // ビット変換した場合
-        // std::ofstream outputfile("../corpus/a_out.txt",
-        //                         std::ios::app);  // 保存用
-        if (v == kEmptyChar) {
-            // outputfile << v;
-            // outputfile.close();
-            std::cout << "0";
-        } else if (v == kLeafChar) {
-            // outputfile << v;
-            // outputfile.close();
-            std::cout << "#";
-        } else {
-            // outputfile << v;
-            // outputfile.close();
-            std::cout << "1";
-        }
-    }
-    std::cout << "\n";*/
+    /**/
 
-    sbv_ = SuccinctBitVector<true>(std::move(storage_));
-    storage_.erase(std::remove(storage_.begin(), storage_.end(), kEmptyChar),
-                   storage_.end());
-
-    // for(auto v : storage_){
-    //  std::cout << v << std::endl;
-    //}
-
-    // 中身確認 **
-    /*std::cout << "|";
+    /*int _0 = 0, _1 = 0, fin = 0;
+    std::cout << "|";
     for (auto check : storage_) {  // check
         if (check == NULL) {
             std::cout << "#|";
+            _1++;
+            fin++;
         } else if (check == kEmptyChar) {
             std::cout << " |";
+            _0++;
         } else {
             std::cout << check << "|";
+            _1++;
         }
     }
-    std::cout << "\n\n" << std::endl;
+
+    std::cout << "\n" << std::endl;
     for (auto code : code_table_) {  // code
         for (auto c : code) {
             std::cout << c << ",";
         }
         std::cout << std::endl;
-    }
-    std::cout << std::endl;*/
+    }*/
+    std::cout << std::endl;
+    std::cout << "CHECK : " << size_vec(storage_) << " [Byte]" << std::endl;
+    std::cout << "CODE : " << size_vec(code_table_) << " [Byte]" << std::endl;
+    std::cout << "Array Size : " << size_vec(storage_) + size_vec(code_table_)
+              << " [Byte]" << std::endl;
+    // std::cout << "\n" << std::endl;
+    // std::cout << "0 : " << _0 << "\n1 : " << _1 << std::endl;
+    // std::cout << "fin : " << fin << std::endl;
+}  // namespace sim_ds
 
-    // output **
-    std::cout << "storage_ : " << size_vec(storage_) << " [B]" << std::endl
-              << "code_table_ : " << size_vec(code_table_) << " [B]"
-              << std::endl
-              << "Rank_Dic & bit : " << sbv_.size_in_bytes() << " [B]"
-              << std::endl
-              << "All Size : "
-              << size_vec(storage_) + size_vec(code_table_) +
-                     sbv_.size_in_bytes()
-              << " [B]" << std::endl;
-}
-
-//  ここがメイン文
 template <typename CodeType>
 template <typename T, typename S>
 _SamcImpl<CodeType>::_SamcImpl(const graph_util::Trie<T, S>& trie) {
@@ -345,6 +310,7 @@ _SamcImpl<CodeType>::_SamcImpl(const graph_util::Trie<T, S>& trie) {
         }
 #ifndef NDEBUG
         std::cerr << "ycheck for each char..." << std::endl;
+        ;
 #endif
         BitVector empties;
         auto old_size = storage_.size();
@@ -533,8 +499,7 @@ class Samc : _SamcImpl<CodeType> {
 
     template <typename T, typename S>
     [[deprecated(
-        "Maybe consume much memory. You should construct from "
-        "string-iterator "
+        "Maybe consume much memory. You should construct from string-iterator "
         "like (begin end)")]] explicit Samc(const input_trie<T, S>& trie)
         : _base(trie) {}
 
@@ -547,8 +512,7 @@ class Samc : _SamcImpl<CodeType> {
     void Read(std::istream& is) { _base::Read(is); }
 
    private:
-    bool in_range(size_t index,
-                  size_t depth) const {  // ここをどうにかしたい
+    bool in_range(size_t index, size_t depth) const {
         assert(depth > 0);
         return _base::head(depth) <= index and index < _base::head(depth + 1);
     }
@@ -557,24 +521,21 @@ class Samc : _SamcImpl<CodeType> {
         return _base::check(index) == _base::kEmptyChar;
     }
 };
-template <typename CodeType>
-bool  // ac() **
-Samc<CodeType>::accept(std::string_view key) const {
+
+template <typename CodeType>  // **
+bool Samc<CodeType>::accept(std::string_view key) const {
     size_t node = 0;
     size_t depth = 0;
     for (; depth < key.size(); depth++) {
         uint8_t c = key[depth];
-        auto target = node + _base::code(depth, c);
-        // std::cout << "code_: " << _base::code(depth, c) << std::endl;
+        auto target = node + _base::code(depth, c - 48);
         if (not in_range(target, depth + 1) or _base::check(target) != c) {
-            // std::cout << std::endl;
-            // std::cout << "> " << _base::check(target) << " : " << c
-            //          << std::endl;
             return false;
         }
-        // std::cout << "" << _base::check(target) << " : " << c <<
-        // std::endl;
         node = target;
+    }
+    if (depth == key.size()) {
+        return true;
     }
     auto terminal = node + _base::code(depth, kLeafChar);
     return (in_range(terminal, depth + 1) and

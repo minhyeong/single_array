@@ -1,21 +1,17 @@
 
 //#include "Samc.hpp"
-//#include "Rank_Samc.hpp"
-#include "Rank_MSB.hpp"  // 終端ないバージョン
+#include "Samc2.hpp"
+//#include "Rank_MSB.hpp"  // 終端ないバージョン
+//#include "Rank_MSB_z.hpp"  // 終端ないバージョン
 //#include "sdsl/rrr_vector.hpp"
 
 // dataset > 比較用データセット群
 //#define FILE_PATH "../dataset/title_100000.txt"
-#define FILE_PATH "../dataset/ja_3word_list.txt"
+//#define FILE_PATH "../dataset/ja_3word_list.txt"
 //#define FILE_PATH "../dataset/ja_word_list.txt"
 //#define FILE_PATH "../dataset/en_3word_list.txt"
 //#define FILE_PATH "../dataset/en_word_list.txt"
-
-// corpus テスト用データセット群
-//#define FILE_PATH "../corpus/en.txt"
-//#define FILE_PATH "../corpus/test.txt"
-//#define FILE_PATH "../corpus/ken.txt"
-//#define FILE_PATH "../corpus/usa.txt"
+#define FILE_PATH "../dataset/zipcode_bul.txt"
 
 int main() {
     std::ifstream ifs(FILE_PATH);
@@ -32,7 +28,7 @@ int main() {
         if (not s.empty()) {
             find_set.push_back(s);
             // s = s.substr(1, 7);
-            s[s.size() - 1] |= (1 << 7);  // MSB
+            // s[s.size() - 1] |= (1 << 7);  // MSB
             // std::cout << " : " << s << std::endl;
             str_set.push_back(s);
         }
