@@ -216,9 +216,6 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
             auto code = prev_height + y_front;
             // code_table_[depth][c] = code;  // シフト数代入
             code_table_[depth][c - 48] = code;
-            // std::cout << "code_table_[" << depth << "][" << c << "] = " <<
-            // code
-            //          << std::endl;
             for (size_t i = 0; i < indices.size(); i++) {
                 size_t index = head_[depth] + indices[i] + code;
                 //#ifndef NDEBUG

@@ -26,6 +26,7 @@ int main() {
     }
     for (std::string s; getline(ifs, s);) {
         if (not s.empty()) {
+            s.resize(4);  // blugaria の末尾に何かついてるため
             find_set.push_back(s);
             // s = s.substr(1, 7);
             // s[s.size() - 1] |= (1 << 7);  // MSB
@@ -67,7 +68,7 @@ int main() {
     //  time measur
     clock_t start = clock();
 
-    for (auto& v : find_set) {
+    for (auto& v : str_set) {
         if (not samc.accept(v)) {
             failed_num++;
         }
