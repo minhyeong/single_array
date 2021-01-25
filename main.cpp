@@ -1,8 +1,9 @@
 
 //#include "Samc.hpp"
-#include "Samc2.hpp"
-//#include "Rank_MSB.hpp"  // 終端ないバージョン
-//#include "Rank_MSB_z.hpp"  // 終端ないバージョン
+//#include "Samc2.hpp" // zip
+#include "Rank_SAMC.hpp"
+//#include "Rank_MSB.hpp" // # 無し
+//#include "Rank_MSB_z.hpp"// zip
 //#include "sdsl/rrr_vector.hpp"
 
 // dataset > 比較用データセット群
@@ -10,8 +11,8 @@
 //#define FILE_PATH "../dataset/ja_3word_list.txt"
 //#define FILE_PATH "../dataset/ja_word_list.txt"
 //#define FILE_PATH "../dataset/en_3word_list.txt"
-//#define FILE_PATH "../dataset/en_word_list.txt"
-#define FILE_PATH "../dataset/zipcode_bul.txt"
+#define FILE_PATH "../dataset/en_word_list.txt"
+//#define FILE_PATH "../dataset/1n-gram.txt"
 
 int main() {
     std::ifstream ifs(FILE_PATH);
@@ -26,7 +27,7 @@ int main() {
     }
     for (std::string s; getline(ifs, s);) {
         if (not s.empty()) {
-            s.resize(4);  // blugaria の末尾に何かついてるため
+            // s.resize(4);  // blugaria の末尾に何かついてるため
             find_set.push_back(s);
             // s = s.substr(1, 7);
             // s[s.size() - 1] |= (1 << 7);  // MSB
