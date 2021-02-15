@@ -262,25 +262,25 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
     for (auto i_c : storage_map) {
         storage_[i_c.first] = i_c.second;
     }
-
-    for (auto v : storage_) {  // ビット変換した場合
-        // std::ofstream outputfile("../corpus/a_out.txt",
-        //                         std::ios::app);  // 保存用
-        if (v == kEmptyChar) {
-            // outputfile << v;
-            // outputfile.close();
-            std::cout << "0";
-        } else if (v == kLeafChar) {
-            // outputfile << v;
-            // outputfile.close();
-            std::cout << "#";
-        } else {
-            // outputfile << v;
-            // outputfile.close();
-            std::cout << "1";
+    /*
+        for (auto v : storage_) {  // ビット変換した場合
+            // std::ofstream outputfile("../corpus/a_out.txt",
+            //                         std::ios::app);  // 保存用
+            if (v == kEmptyChar) {
+                // outputfile << v;
+                // outputfile.close();
+                std::cout << "0";
+            } else if (v == kLeafChar) {
+                // outputfile << v;
+                // outputfile.close();
+                std::cout << "#";
+            } else {
+                // outputfile << v;
+                // outputfile.close();
+                std::cout << "1";
+            }
         }
-    }
-    std::cout << "\n";
+        std::cout << "\n";*/
 
     sbv_ = SuccinctBitVector<true>(std::move(storage_));
     storage_.erase(std::remove(storage_.begin(), storage_.end(), kEmptyChar),

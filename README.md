@@ -9,40 +9,31 @@
     cd build
     cmake ..
     make
+    ./main ファイルのPATH
     ```
     - 通らない場合 CMakeLists.txt の28行目を下記に変更
         ```
         target_link_libraries(main PRIVATE sim_ds) /// sdsl を使わないため
         ```
 
-## 暫定出力結果
-- データセット
-    - [enwiki-latest-all-titles-in-ns0.gz](https://dumps.wikimedia.org/enwiki/latest/)
-        - ソート後 100,000 文字分使用
-            - 大きすぎるとメモリフロー起こす
-
-||SAMC|RANK|LOUDS|
-|:-|:-|:-|:-|
-|CHECK[B]|778,327,786|1,283,016||
-|Code[B]|225,288|225,288|||
-|FID_rank[B]||121,623,788||
-|All_Size|778,553,074|123,132,092|1,793,028|
-|検索時間[ms/word]|0.001,699,38|0.003,302,56|0.002,077,71|
-
-## 日本郵便番号
-||SAMC|RANK|LOUDS|
-|:-|:-|:-|:-|
-|CHECK[B]|4,914,166|268,953||
-|Code[B]|8,200|8,200|||
-|FID_rank[B]||769,040||
-|All_Size|4,922,366|1,046,193|225,337|
-|検索時間[ms/word]|0.000,388,66|0.000,754,61|0.000,554,973|
-
-## USA zip_code
-||SAMC|RANK|LOUDS|
-|:-|:-|:-|:-|
-|CHECK[B]|206,833|91,252||
-|Code[B]|6,152|6,152|||
-|FID_rank[B]||32,744||
-|All_Size|212,985|130,148|75,133|
-|検索時間[ms/word]|0.000,227,72|0.000,534,28| 0.000,575,938|
+## ファイルの説明
+- Samc.hpp
+    - 従来手法
+- Samc2.hpp
+    - データセットが固定長の場合に用いる
+- Samc3.hpp
+    - 終端記号の削減を行った場合
+        ```
+        main.cpp 22行目
+        s = s.substr(1, 7); のコメント分を解除
+        ```
+- Rank_SAMC.hpp
+    - 従来手法に完備辞書を入れたもの
+- Rank_MSB.hpp
+    - 従来手法から終端記号を削減し、完備辞書を入れたもの
+        ```
+        main.cpp 22行目
+        s = s.substr(1, 7); のコメント分を解除
+        ```
+- Rank_MSB_z.hpp
+    - データセットが固定長の場合に用いるRank_SAMC

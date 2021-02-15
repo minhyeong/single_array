@@ -185,7 +185,7 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
             tmp.push_back(indices.size());
             code_.push_back(tmp);  // 文字 / 要素数
         }
-        std::sort(  // 要素数降順
+        std::sort(  // 要素順にソート
             code_.begin(), code_.end(),
             [](const std::vector<size_t>& alpha,
                const std::vector<size_t>& beta) { return alpha[1] > beta[1]; });
@@ -196,10 +196,12 @@ _SamcImpl<CodeType>::_SamcImpl(const string_array_explorer<Iter>& explorer) {
         }
         code_.clear();
         //----------------------------------------------------------
+
         for (size_t c : code_out) {
             // for (size_t c = 0; c < kAlphabetSize; c++) {
             auto& indices = indices_table[c];
-            // if (indices.empty()) continue;
+            if (indices.empty()) continue;
+            if (c == kLeafChar) continue;  // 終端文字削除
 #ifndef NDEBUG
             std::cerr << c << ':' << uint8_t(c)
                       << ", indices: " << indices.size() << std::endl;
@@ -521,6 +523,32 @@ class Samc : _SamcImpl<CodeType> {
 };
 
 template <typename CodeType>
+bool  // ac() **
+Samc<CodeType>::accept(std::string_view key) const {
+    size_t node = 0;
+    size_t depth = 0;
+    for (; depth < key.size(); depth++) {
+        uint8_t c = key[depth];
+        auto target = node + _base::code(depth, c);
+        if (key.size() - 1 == depth) {
+            c |= (1 << 7);
+            target = node + _base::code(depth, c);
+            if (in_range(target, depth + 1) and _base::check(target) == c) {
+                return true;
+            }
+        } else {
+            if (not in_range(target, depth + 1) or _base::check(target) != c) {
+                return false;
+            }
+        }
+        node = target;
+    }
+    auto terminal = node + _base::code(depth, kLeafChar);
+    return (in_range(terminal, depth + 1) and
+            _base::check(terminal) == kLeafChar);
+}
+/*
+template <typename CodeType>
 bool Samc<CodeType>::accept(std::string_view key) const {
     size_t node = 0;
     size_t depth = 0;
@@ -535,7 +563,7 @@ bool Samc<CodeType>::accept(std::string_view key) const {
     auto terminal = node + _base::code(depth, kLeafChar);
     return (in_range(terminal, depth + 1) and
             _base::check(terminal) == kLeafChar);
-}
+}*/
 
 // MARK: SamcDict
 

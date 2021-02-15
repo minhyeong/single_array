@@ -8,3 +8,5 @@
 corpus/
 dataset/
 dataset.*
+
+en_3word_list.txt  en_word_list.txt  ja_3word_list.txt  ja_word_list.txt  title_100000.txt  usa.txt

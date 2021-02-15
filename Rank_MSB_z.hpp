@@ -83,7 +83,7 @@ class _SamcImpl {
     std::vector<bool> exist_flag_bits_;  //
     SuccinctBitVector<true> sbv_;        //
     // std::vector<std::array<code_type, kAlphabetSize>> code_table_;
-    std::vector<std::array<code_type, 20>> code_table_;  // zipcode 用
+    std::vector<std::array<code_type, 10>> code_table_;  // zipcode 用
     // 終端文字込み 必要最低数
     std::vector<code_type> head_;
 

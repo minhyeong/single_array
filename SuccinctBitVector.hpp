@@ -99,15 +99,15 @@ SuccinctBitVector<UseSelect>::SuccinctBitVector(BitVector&& bits)
         0;  // basic_block_[1] が0の理由は? ヘッダ?
     size_t i = 0;
     for (i = 1; i < bits_.size() / 64; i++) {  // 大ブロックごとの記録
-        if (i % 8 == 0) {                      // 8ビットごとに初期化?
+        if (i % 8 == 0) {                      // 小ブロック
             size_t j = i / 8 * 2;
             basic_block_[j - 1] = sum_word;
             basic_block_[j] = basic_block_[j - 2] + sum;  //
             sum_word = sum = 0;
-        } else {
+        } else { // ビットパターン
             sum_word |= sum << (63 - 9 * (i % 8));  // 63~0 で何をしてるのか
         }
-        sum += bit_util::popcnt(*(++data));  // 次のブロックの１の総数を代入
+        sum += bit_util::popcnt(*(++data));  // 大ブロック
     }
     if (i % 8 != 0) {  // 小ブロックごとの記録
         size_t j = i / 8 * 2;
